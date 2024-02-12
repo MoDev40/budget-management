@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+
+model User {
+  id            String       @id @db.VarChar(36)
+  username      String
+  isAdmin       Boolean      @default(false)
+  balances      Balance[]
+  transactions  Transaction[]
+  categories    Category[]
+  goals         Goal[]
+  budgets       Budget[]
+}
+
+model Balance {
+  id          String    @id @db.VarChar(36)
+  amount      Float
+  userId      String
+  fromDate    DateTime
+  toDate      DateTime
+  budgetId    String     @unique 
+  budget      Budget     @relation(fields: [budgetId], references: [id])
+  user        User       @relation(fields: [userId], references: [id])
+
+}
+
+model Transaction {
+  id           String    @id @db.VarChar(36)
+  amount       Float
+  description  String?
+  createdAt    DateTime  @default(now())
+  payedAt      DateTime  @default(now())
+  categoryId   String
+  userId       String
+  user         User      @relation(fields: [userId], references: [id])
+  category     Category  @relation(fields: [categoryId], references: [id])
+}
+
+model Category {
+  id           String       @id @db.VarChar(36)
+  name         String
+  userId       String
+  price        Float?
+  transactions Transaction[]
+  user         User      @relation(fields: [userId], references: [id])
+
+}
+
+model Goal {
+  id        String    @id @db.VarChar(36)
+  amount    Float
+  dueDate   DateTime
+  achieved  Boolean   @default(true)
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+}
+
+model Budget {
+  id          String    @id @db.VarChar(36)
+  amount      Float
+  startDate   DateTime
+  endDate     DateTime
+  userId      String
+  balance     Balance[]
+  user        User      @relation(fields: [userId], references: [id])
+}
