@@ -14,11 +14,11 @@ const NavBar : React.FC<Props>= ({user}) => {
         <ul className="flex flex-row space-x-5 items-center capitalize text-[1.2rem] font-normal">
         {!user ? 
             <>
-            <li><Link to="/signup"><Button variant="secondary">SignUp</Button></Link></li>
-            <li><Link to="/login"><Button variant="secondary">Login</Button></Link></li>
+            <Link to="/signup"><Button variant="secondary">SignUp</Button></Link>
+            <Link to="/login"><Button variant="secondary">Login</Button></Link>
             </>
             :
-            <li><Link to="/dashboard"><Button variant="secondary">Dashboard</Button></Link></li>
+            <Link to="/dashboard"><Button variant="secondary">Dashboard</Button></Link>
         }
         </ul>
     </div>

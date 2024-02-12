@@ -1,6 +1,58 @@
-const LeftBar = () => {
+import { useEffect } from "react"
+import { Props } from "./TopBar"
+import { Link } from "react-router-dom";
+import { Label } from "../ui/label";
+import { FaHouse, FaLandmarkFlag, FaMoneyBillTransfer, FaMoneyBills, FaUserGroup } from "react-icons/fa6";
+import { Settings } from "lucide-react";
+const LeftBar : React.FC<Props>= ({togle,setTogle}) => {
+  useEffect(()=>{
+    console.log(togle);
+  },[togle])
+
+  const handleClose : ()=> void = ()=>{
+    setTogle(!togle)
+  }
   return (
-    <div className="h-screen md:block p-5 hidden bg-black">LeftBar</div>
+    <div className={togle ? "h-screen block p-5  bg-black" : "md:block hidden  h-screen   bg-black"}>
+      <ul className="text-white space-y-8 p-4">
+        <li>
+          <Link className="flex flex-row items-center space-x-3" onClick={handleClose} to={"/"}>
+            <FaHouse size={25}/>
+            <Label>Home</Label>
+          </Link>
+        </li>
+        <li>
+          <Link className="flex flex-row items-center space-x-3" onClick={handleClose} to={"/dashboard/landing"}>
+            <FaLandmarkFlag size={25}/>
+            <Label>Landing</Label>
+          </Link>
+        </li>
+        <li>
+          <Link className="flex flex-row items-center space-x-3" onClick={handleClose} to={""}>
+            <FaMoneyBills size={25}/>
+            <Label>Types</Label>
+          </Link>
+        </li>
+        <li>
+          <Link className="flex flex-row items-center space-x-3" onClick={handleClose} to={""}>
+            <FaMoneyBillTransfer size={25}/>
+            <Label>History</Label>
+          </Link>
+        </li>
+        <li>
+          <Link className="flex flex-row items-center space-x-3" onClick={handleClose} to={""}>
+            <FaUserGroup size={25}/>
+            <Label>Users</Label>
+          </Link>
+        </li>
+        <li>
+          <Link className="flex flex-row items-center space-x-3" onClick={handleClose} to={"/dashboard/profile"}>
+            <Settings size={25}/>
+            <Label>Setting</Label>
+          </Link>
+        </li>
+      </ul>
+    </div>
   )
 }
 

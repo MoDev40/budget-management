@@ -1,17 +1,17 @@
-import BottomBar from "./BottomBar"
-import FooterBar from "./FooterBar"
+import { Outlet } from "react-router-dom"
 import LeftBar from "./LeftBar"
 import TopBar from "./TopBar"
-
+import { useEffect, useState } from "react"
 const Dashboard = () => {
+  const [togle,setTogle] = useState<boolean>(false)
+  useEffect(()=>{
+    console.log(togle);
+  },[togle])
   return (
-    <div className="flex flex-col">
-      <TopBar/>
-      <div className="w-full flex flex-row md:space-x-10">
-        <LeftBar/>
-        <BottomBar/>
-      </div>
-      <FooterBar/>
+    <div className="flex flex-col space-y-10 md:space-y-0 md:flex-row">
+      <TopBar togle={togle} setTogle={setTogle}/>
+      <LeftBar togle={togle} setTogle={setTogle}/>
+      <Outlet/>
     </div>
   )
 }
