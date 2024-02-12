@@ -12,7 +12,8 @@ import HomePage from './pages/HomePage.tsx'
 import LandingPage from './pages/dashboard/LandingPage.tsx'
 import { DateDataProvider } from './hooks/DateContext.tsx'
 import { AuthProvider } from './hooks/AuthUser.tsx'
-
+import {store} from "../strore/store.ts"
+import { Provider } from 'react-redux'
 
 const router = createBrowserRouter([
   {
@@ -44,6 +45,7 @@ const router = createBrowserRouter([
 ])
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
+    <Provider store={store}>
     <AuthProvider>
     <DateDataProvider>
     <RouterProvider router={router}/>
@@ -51,5 +53,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <App />
     </DateDataProvider>
     </AuthProvider>
+    </Provider>
   </React.StrictMode>,
 )

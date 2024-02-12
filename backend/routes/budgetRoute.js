@@ -4,5 +4,5 @@ const route = express.Router()
 
 route.post("/create-budget",createBudget)
 route.put("/update-budget/:id",updateBudget)
-route.get("/user-budget/:id/:userId",getBudget)
+route.get("/user-budget/:id",getBudget)
 export default route

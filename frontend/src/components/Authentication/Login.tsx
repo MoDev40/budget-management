@@ -52,7 +52,7 @@ const Login = () => {
       })
       setIsPending(false)
     }
-    if(user) return <Navigate to="/"/>
+    if(user) return <Navigate to="/dashboard"/>
   return (
       <div className="flex flex-col md:flex-row md:max-w-[1120px] md:mx-auto md:p-10">
       <div className="w-full hidden md:block">

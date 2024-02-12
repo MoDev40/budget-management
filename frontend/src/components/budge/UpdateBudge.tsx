@@ -6,45 +6,37 @@ import {z} from "zod"
 import { Input } from "../ui/input"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { IoReload } from "react-icons/io5"
-import { useDate } from "@/hooks/DateContext"
 import { toast } from "sonner"
 import { useAuth } from "@/hooks/AuthUser"
-import { useCreateBudgetMutation } from "../../../strore/features/budgetSlice"
+import { useUpdateBudgetMutation, useGetUserBudgetQuery } from "../../../strore/features/budgetSlice"
+import { ErrorRes, SuccRes } from "./CreateBudge"
 
 interface ReqBody {
     userId:string;
     amount:number;
-    startDate:Date;
-}
-
-export type ErrorRes = {
-    data:{
-        message:string
-    }
-}
-export type SuccRes = {
-    message:string
 }
 
 
-const CreateBudge = () => {
-    const [createBudge,{isLoading}] = useCreateBudgetMutation()
+
+const UpdateBudge = () => {
     const {user} = useAuth()
-    const {data:dates} = useDate()
+    const {data:budget}= useGetUserBudgetQuery({id:user?.uid as string})
+    const [UpdateBudget,{isLoading}] = useUpdateBudgetMutation()
     const budgeSchema = z.object({
         userId:z.string(),
         amount:z.string(),
     })
     type Inputs = z.infer<typeof budgeSchema>
     const form = useForm<Inputs>({resolver:zodResolver(budgeSchema),defaultValues:{
-        userId:user?.uid
+        userId:user?.uid,
+        amount:budget?.isBudgetExists?.amount
     }})
 
 
     const onSubmit : SubmitHandler<Inputs> = async(data)=>{
         const {amount,userId} =  data
-        const reqBody : ReqBody = {amount:Number(amount),userId,startDate:dates?.dateOne as Date}
-        await createBudge(reqBody).unwrap().then((data:SuccRes)=>{
+        const reqBody : ReqBody = {amount:Number(amount),userId}
+        await UpdateBudget({data:reqBody,id:budget?.isBudgetExists?.id}).unwrap().then((data:SuccRes)=>{
             toast(data.message)
         }).catch((error:ErrorRes)=>{
             toast(error.data.message)
@@ -53,7 +45,7 @@ const CreateBudge = () => {
 
   return (
     <Popover>
-        <PopoverTrigger asChild><Button className="md:w-[50%] md:mx-auto" variant="outline">Create Budget</Button></PopoverTrigger>
+        <PopoverTrigger asChild><Button className="md:w-[50%] md:mx-auto" variant="outline">Edit Budget</Button></PopoverTrigger>
         <PopoverContent>
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}  className="flex flex-col space-y-4">
@@ -91,4 +83,4 @@ const CreateBudge = () => {
   )
 }
 
-export default CreateBudge
+export default UpdateBudge

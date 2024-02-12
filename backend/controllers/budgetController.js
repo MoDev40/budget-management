@@ -7,8 +7,10 @@ export async function createBudget(req,res){
         const {amount,startDate,userId} = req.body
         const id = await cryptoRandomStringAsync({length:26,type:"alphanumeric"})
 
-        const getMonth = startDate.getMonth()
-        const getYear = startDate.getFullYear()
+        const currentDate = new Date(startDate)
+
+        const getMonth = currentDate.getMonth()
+        const getYear = currentDate.getFullYear()
 
         const initialtDate = new Date(getYear,getMonth,1)
         const endDate = new Date(getYear,getMonth+1,1)
@@ -38,7 +40,7 @@ export async function createBudget(req,res){
         const createdBudget = await prisma.budget.create({
             data:{
                 id,
-                startDate,
+                startDate:currentDate,
                 endDate,
                 amount,
                 userId
@@ -55,7 +57,7 @@ export async function createBudget(req,res){
             data:{
                 id:balanceId,
                 amount:createdBudget.amount,
-                fromDate:startDate,
+                fromDate:currentDate,
                 toDate:endDate,
                 userId,
                 budgetId:createdBudget.id
@@ -142,7 +144,7 @@ export async function updateBudget(req,res){
             res.status(400).json({message:"Error updating budget Try again"})
             return
         }
-        res.status(201).json({updatedBudget})
+        res.status(201).json({message:"Updated successfully",updatedBudget})
     } catch (error) {
         res.status(500).json({mesaage:error.mesaage,error})
     }
@@ -151,15 +153,14 @@ export async function updateBudget(req,res){
 export async function getBudget (req,res){
     try {
         
-        const {id,userId} = req.params
+        const {id} = req.params
         const currentDate = new Date()
         const getFullYear = currentDate.getFullYear()
         const getMonth = currentDate.getMonth()
 
-        const isBudgetExists = await prisma.budget.findUnique({
+        const isBudgetExists = await prisma.budget.findFirst({
             where:{
-                id,
-                userId,
+                userId:id,
                 endDate:new Date(getFullYear,getMonth+1,1)
             },include:{
                 balance:true
