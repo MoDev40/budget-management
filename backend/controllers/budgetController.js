@@ -94,6 +94,7 @@ export async function updateBudget(req,res){
                 balance:true
             }
         })
+
         if(!isBudgetExists){
             res.status(404).json({message:"Budget not found"})
             return
@@ -102,14 +103,14 @@ export async function updateBudget(req,res){
         const balanceAmount = isBudgetExists.balance[0].amount
 
         if(amount > isBudgetExists.amount){
-            const updatedAmount = amount - isBudgetExists.amount
+            const updatedAmount = isBudgetExists.balance[0].amount + (amount - isBudgetExists.amount)
             const increasedBalance = await increaceBalance(userId,updatedAmount,isBudgetExists.balance[0].id)
             if(!increasedBalance){
                 res.status(400).json({message:"Error updating budget Try again"})
                 return
             }
         }else if(amount < isBudgetExists.amount){
-            const updatedAmount = isBudgetExists.amount - amount
+            const updatedAmount = isBudgetExists.balance[0].amount - (isBudgetExists.amount - amount)
             const decreasedBalance = await decreaceBalance(userId,updatedAmount,isBudgetExists.balance[0].id)
             if(!decreasedBalance){
                 res.status(400).json({message:"Error updating budget Try again"})
@@ -139,6 +140,7 @@ export async function updateBudget(req,res){
                     id:isBudgetExists.balance[0].id
                 }
             })
+            console.log(balanceAmount);
             res.status(400).json({message:"Error updating budget Try again"})
             return
         }
