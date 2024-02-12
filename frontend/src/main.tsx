@@ -10,6 +10,9 @@ import DashboardPage from './pages/dashboard/DashboardPage.tsx'
 import ProfilePage from './pages/dashboard/ProfilePage.tsx'
 import HomePage from './pages/HomePage.tsx'
 import LandingPage from './pages/dashboard/LandingPage.tsx'
+import { DateDataProvider } from './hooks/DateContext.tsx'
+import { AuthProvider } from './hooks/AuthUser.tsx'
+
 
 const router = createBrowserRouter([
   {
@@ -41,8 +44,12 @@ const router = createBrowserRouter([
 ])
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
+    <AuthProvider>
+    <DateDataProvider>
     <RouterProvider router={router}/>
     <Toaster/>
     <App />
+    </DateDataProvider>
+    </AuthProvider>
   </React.StrictMode>,
 )

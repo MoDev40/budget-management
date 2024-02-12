@@ -2,8 +2,9 @@ import { useEffect } from "react"
 import { Props } from "./TopBar"
 import { Link } from "react-router-dom";
 import { Label } from "../ui/label";
-import { FaHouse, FaLandmarkFlag, FaMoneyBillTransfer, FaMoneyBills, FaUserGroup } from "react-icons/fa6";
+import { FaHouse, FaMoneyBillTransfer, FaMoneyBills, FaUserGroup } from "react-icons/fa6";
 import { Settings } from "lucide-react";
+import {GrDocumentConfig} from "react-icons/gr"
 const LeftBar : React.FC<Props>= ({togle,setTogle}) => {
   useEffect(()=>{
     console.log(togle);
@@ -13,7 +14,7 @@ const LeftBar : React.FC<Props>= ({togle,setTogle}) => {
     setTogle(!togle)
   }
   return (
-    <div className={togle ? "h-screen block p-5  bg-black" : "md:block hidden  h-screen   bg-black"}>
+    <div className={togle ? "h-screen block p-5  bg-black" : "md:block hidden p-5  h-screen   bg-black"}>
       <ul className="text-white space-y-8 p-4">
         <li>
           <Link className="flex flex-row items-center space-x-3" onClick={handleClose} to={"/"}>
@@ -23,8 +24,8 @@ const LeftBar : React.FC<Props>= ({togle,setTogle}) => {
         </li>
         <li>
           <Link className="flex flex-row items-center space-x-3" onClick={handleClose} to={"/dashboard/landing"}>
-            <FaLandmarkFlag size={25}/>
-            <Label>Landing</Label>
+            <GrDocumentConfig size={25}/>
+            <Label>Overview</Label>
           </Link>
         </li>
         <li>

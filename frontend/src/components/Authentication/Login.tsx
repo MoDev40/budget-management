@@ -1,7 +1,7 @@
 import { Input } from "@/components/ui/input"
 import { Label } from "../ui/label"
 import { Button } from "../ui/button"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, Navigate, useNavigate } from "react-router-dom"
 import {
   Form,
   FormControl,
@@ -15,17 +15,17 @@ import {z} from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm,SubmitHandler} from "react-hook-form";
 
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { UserCredential, signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/lib/firebase";
-import { useEffect } from "react"
 
-import Cookies from "js-cookie"
+import { IoReload } from "react-icons/io5"
+import { useState } from "react"
+import { toast } from "sonner"
+import { useAuth } from "@/hooks/AuthUser"
 
 const Login = () => {
-  useEffect(()=>{
-    console.log(auth.currentUser);
-  },[])
-
+  const {user} = useAuth()
+  const [isPending,setIsPending] = useState<boolean>(false)
   const navigate = useNavigate()
 
   const userSchema = z.object({
@@ -39,20 +39,20 @@ const Login = () => {
   const form = useForm<Inputs>({resolver:zodResolver(userSchema)})
 
   const onsubmit : SubmitHandler<Inputs> = async(data)=>{
-    try {
-      
+      setIsPending(true)
       const {email,password} = data
-      const user = await signInWithEmailAndPassword(auth,email,password).then(async (data)=>{
-        const token = await data.user.getIdToken()
-        Cookies.set("token",token)
+      await signInWithEmailAndPassword(auth,email,password).then((data:UserCredential)=>{
+        toast(`Welcome Back ${data.user.email}`,
+        {
+          description:new Date().toDateString()
+        })
         navigate("/")
+      }).catch((error)=>{
+        toast(error.message)
       })
-
-      console.log(user);
-    } catch (error) {
-      console.log(error);
+      setIsPending(false)
     }
-  } 
+    if(user) return <Navigate to="/"/>
   return (
       <div className="flex flex-col md:flex-row md:max-w-[1120px] md:mx-auto md:p-10">
       <div className="w-full hidden md:block">
@@ -68,7 +68,7 @@ const Login = () => {
                 <FormItem className="space-y-0">
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="Email" {...field} />
+                    <Input placeholder="Email" {...field} type="email"/>
                   </FormControl>
                   <FormMessage className="p-0 text-right"/>
                 </FormItem>
@@ -89,7 +89,7 @@ const Login = () => {
               />
             <div className="my-2 flex flex-col space-y-3">
             <Label>Forget Password</Label>
-            <Button type="submit" className="w-full">Login</Button>
+            <Button type="submit">{ isPending ?<IoReload size={20} className="animate-spin"/> :"Login"}</Button>
             <p className="text-center w-full">don't have account <Link className="underline text-blue-500" to="/signup">create one</Link></p>
             </div>
           </form>

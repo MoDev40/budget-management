@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input"
 import { Button } from "../ui/button"
-import { Link } from "react-router-dom"
+import { Link, Navigate, useNavigate } from "react-router-dom"
 import {
   Form,
   FormControl,
@@ -14,13 +14,24 @@ import {z} from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm,SubmitHandler} from "react-hook-form";
 
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {UserCredential, createUserWithEmailAndPassword, deleteUser } from "firebase/auth";
 import { auth } from "@/lib/firebase";
-import { apiKey } from "@/lib/config"
+import axios from "axios"
+import { useState } from "react"
+import { IoReload } from "react-icons/io5"
+import { useAuth } from "@/hooks/AuthUser"
 
+type ReqBody = {
+  username:string,
+  uid:string
+}
 
-
+const createUser : (data:ReqBody)=>Promise<UserCredential> = async(data:ReqBody)=>{
+  return await axios.post("http://localhost:8000/api/create-user",data)
+}
 const Signup = () => {
+  const {user} = useAuth()
+
   const userSchema = z.object({
     username:z.string().min(2,{message:"Username must be at least 2 characters."}),
     email:z.string().email({message:"Enter Valid Email"}),
@@ -29,21 +40,34 @@ const Signup = () => {
     .max(12,{message:"Miximum Password is 12"})
   })
 
+  const [isPending,setIsPending] = useState<boolean>(false)
+
   type Inputs = z.infer<typeof userSchema>
   const form = useForm<Inputs>({resolver:zodResolver(userSchema)})
+  const navigate = useNavigate()
 
   const onsubmit : SubmitHandler<Inputs> = async(data)=>{
-    try {
+      setIsPending(true)
       
-      const {email,password} = data
-      const user = await createUserWithEmailAndPassword(auth,email,password)
-      console.log(user);
-    } catch (error) {
-      
-      console.log(error);
-    }
-    console.log(apiKey);
-  } 
+      const {email,password,username} = data
+      try {
+        
+        const user = await createUserWithEmailAndPassword(auth,email,password)
+        const reqBody : ReqBody = {username,uid:user.user.uid}
+  
+        await createUser(reqBody).then(()=>{
+          navigate("/login")
+        }).catch(async()=>{
+          await deleteUser(user.user)
+        })
+        setIsPending(false)
+
+      } catch (error) {
+        console.log(error);
+      }
+  }
+  
+  if(user) return <Navigate to="/"/> 
   return (
       <div className="flex flex-col md:flex-row md:max-w-[1120px] md:mx-auto md:p-10">
       <div className="w-full hidden md:block">
@@ -72,7 +96,7 @@ const Signup = () => {
                 <FormItem className="space-y-0">
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="Email" {...field} />
+                    <Input placeholder="Email" {...field} type="email"/>
                   </FormControl>
                   <FormMessage className="p-0 text-right"/>
                 </FormItem>
@@ -85,14 +109,14 @@ const Signup = () => {
                 <FormItem className="space-y-0">
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input placeholder="Password" {...field} />
+                    <Input placeholder="Password" {...field} type="password"/>
                   </FormControl>
                   <FormMessage className="p-0 text-right"/>
                 </FormItem>
               )}
               />
             <div className="my-2 flex flex-col space-y-3">
-            <Button type="submit" className="w-full">Sign up</Button>
+            <Button type="submit">{ isPending ?<IoReload size={20} className="animate-spin"/> :"SignUp"}</Button>
             <p className="text-center w-full">already have an account <Link className="underline text-blue-500" to="/login">Login</Link></p>
             </div>
           </form>

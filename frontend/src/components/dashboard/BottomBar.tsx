@@ -1,5 +1,6 @@
 import { LucideBadgeDollarSign, Wallet } from "lucide-react"
 import { Button } from "../ui/button"
+import CreateBudge from "../budge/CreateBudge"
 
 const BottomBar = () => {
   const date = new Date()
@@ -18,7 +19,7 @@ const BottomBar = () => {
       <div className="flex  flex-col md:flex-row justify-between md:space-y-0 space-y-5 md:space-x-4 h-64 md:h-96">
         <div className="flex flex-col justify-center space-y-8 border border-[#ccc] p-10 rounded w-full">
           <Wallet size={50} className="w-[50%] mx-auto"/>
-          <Button className="md:w-[50%] md:mx-auto" variant="outline">Create Budget</Button>
+          <CreateBudge/>
         </div>
         <div className="flex flex-col justify-center bg-black border border-[#ccc] p-10 rounded w-full">
           <ul className="text-white">

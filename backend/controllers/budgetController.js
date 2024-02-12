@@ -7,10 +7,8 @@ export async function createBudget(req,res){
         const {amount,startDate,userId} = req.body
         const id = await cryptoRandomStringAsync({length:26,type:"alphanumeric"})
 
-        const currentDate = new Date(startDate)
-
-        const getMonth = currentDate.getMonth()
-        const getYear = currentDate.getFullYear()
+        const getMonth = startDate.getMonth()
+        const getYear = startDate.getFullYear()
 
         const initialtDate = new Date(getYear,getMonth,1)
         const endDate = new Date(getYear,getMonth+1,1)
@@ -40,7 +38,7 @@ export async function createBudget(req,res){
         const createdBudget = await prisma.budget.create({
             data:{
                 id,
-                startDate:currentDate,
+                startDate,
                 endDate,
                 amount,
                 userId
@@ -57,7 +55,7 @@ export async function createBudget(req,res){
             data:{
                 id:balanceId,
                 amount:createdBudget.amount,
-                fromDate:currentDate,
+                fromDate:startDate,
                 toDate:endDate,
                 userId,
                 budgetId:createdBudget.id
@@ -74,7 +72,7 @@ export async function createBudget(req,res){
             return
         }
 
-        res.status(201).json({createdBudget,initializeBalance})
+        res.status(201).json({message:"Budge created successfully"})
     } catch (error) {
         res.status(500).json({mesaage:error.mesaage,error})
     }
@@ -145,6 +143,34 @@ export async function updateBudget(req,res){
             return
         }
         res.status(201).json({updatedBudget})
+    } catch (error) {
+        res.status(500).json({mesaage:error.mesaage,error})
+    }
+}
+
+export async function getBudget (req,res){
+    try {
+        
+        const {id,userId} = req.params
+        const currentDate = new Date()
+        const getFullYear = currentDate.getFullYear()
+        const getMonth = currentDate.getMonth()
+
+        const isBudgetExists = await prisma.budget.findUnique({
+            where:{
+                id,
+                userId,
+                endDate:new Date(getFullYear,getMonth+1,1)
+            },include:{
+                balance:true
+            }
+        })
+
+        if(!isBudgetExists){
+            res.status(404).json({message:"Budget not found"})
+            return
+        }
+        res.status(200).json({message:"Budget Found",isBudgetExists})
     } catch (error) {
         res.status(500).json({mesaage:error.mesaage,error})
     }
