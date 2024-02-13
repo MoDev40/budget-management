@@ -48,7 +48,6 @@ model Category {
   id           String       @id @db.VarChar(36)
   name         String
   userId       String
-  price        Float?
   transactions Transaction[]
   user         User      @relation(fields: [userId], references: [id])
 

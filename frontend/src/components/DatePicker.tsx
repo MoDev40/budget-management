@@ -12,13 +12,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { useDate } from "@/hooks/DateContext"
+import { useTranData } from "@/hooks/TransContext"
 
 export function DatePicker() {
-  const {data,setData} = useDate()
+  const {data,setData} = useTranData()
   const [date, setDate] = React.useState<Date>()
   React.useEffect(()=>{
-    setData({...data,dateOne:date as Date})
+    setData({...data,payetAt:date as Date,categoryId:data?.categoryId as string})
   },[date])
   return (
     <Popover>
@@ -27,7 +27,6 @@ export function DatePicker() {
           variant={"outline"}
           className={cn(
             "w-full justify-start text-left font-normal",
-            !date && "text-muted-foreground"
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />

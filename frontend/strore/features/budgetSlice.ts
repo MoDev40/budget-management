@@ -39,7 +39,7 @@ export const budgetSlice = createApi({
     endpoints:(builder)=>({
         getUserBudget:builder.query<ResData,Params>({
             query:({id})=>({
-                url:`/user-budget/${id}`
+                url:`user-budget/${id}`
             }),
             providesTags:["budget"]
         }),
@@ -53,7 +53,7 @@ export const budgetSlice = createApi({
         }),
         updateBudget:builder.mutation<ResponseData,UpdateParams>({
             query:({id,data})=>({
-                url:`/update-budget/${id}`,
+                url:`update-budget/${id}`,
                 method:"PUT",
                 body:data
             }),

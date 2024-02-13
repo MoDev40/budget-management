@@ -25,7 +25,7 @@ const LeftBar : React.FC<Props>= ({togle,setTogle}) => {
           </Link>
         </li>
         <li>
-          <Link className="flex flex-row items-center space-x-3" onClick={handleClose} to={"/dashboard/landing"}>
+          <Link className="flex flex-row items-center space-x-3" onClick={handleClose} to={"/dashboard/configure"}>
             <GrDocumentConfig size={25}/>
             <Label>Configure</Label>
           </Link>
@@ -37,16 +37,16 @@ const LeftBar : React.FC<Props>= ({togle,setTogle}) => {
           </Link>
         </li>
         <li>
-          <Link className="flex flex-row items-center space-x-3" onClick={handleClose} to={""}>
+          <Link className="flex flex-row items-center space-x-3" onClick={handleClose} to={"/dashboard/history"}>
             <FaMoneyBillTransfer size={25}/>
             <Label>History</Label>
           </Link>
         </li>
         <li>
-          <Link className="flex flex-row items-center space-x-3" onClick={handleClose} to={""}>
+          {/* <Link className="flex flex-row items-center space-x-3" onClick={handleClose} to={""}>
             <FaUserGroup size={25}/>
             <Label>Users</Label>
-          </Link>
+          </Link> */}
         </li>
         <li>
           <Link className="flex flex-row items-center space-x-3" onClick={handleClose} to={"/dashboard/profile"}>

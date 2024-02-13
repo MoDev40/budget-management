@@ -7,7 +7,9 @@ export async function createTransaction(req,res){
         const {amount,categoryId,userId,description,payedAt} = req.body
 
         const currentDate = new Date();
+
         const payed = new Date(payedAt);
+
         const getYear = currentDate.getFullYear();
         const getMonth = currentDate.getMonth();
 
@@ -15,12 +17,11 @@ export async function createTransaction(req,res){
         const getPayedMonth = payed.getMonth();
 
         const transId = await randomId()
-        const endDate = new Date(getYear,getMonth+1,1)
 
         const existBalance = await prisma.balance.findFirst({
             where:{
                 userId,
-                toDate:endDate
+                toDate:new Date(getYear,getMonth+1,1)
             }
         })
 
@@ -96,7 +97,7 @@ export async function createTransaction(req,res){
             res.status(400).json({message:"Error try again"})
             return
         }
-        res.status(201).json({createdTrans,decreacedBalance})
+        res.status(201).json({message:"Created successfully"})
     } catch (error) {
         res.status(500).json({mesaage:error.mesaage,error})
     }
@@ -272,3 +273,90 @@ export async function deleteTransaction(req,res){
         res.status(500).json({mesaage:error.mesaage,error})       
     }
 }
+
+export async function getUserTrans(req,res){
+    try {
+        const {id} = req.params
+        const date = new Date()
+        const getYear = date.getFullYear();
+        const getMonth = date.getMonth();
+
+        const isTransExists = await prisma.transaction.findMany({
+            orderBy:[{createdAt:"desc"}],
+            where:{
+                userId:id,
+                createdAt:{
+                    lte: new Date(getYear,getMonth+1,1),
+                    gte: new Date(getYear,getMonth,1)
+                }
+            }
+        })
+
+        if(!isTransExists){
+            res.status(404).json({message:"Transaction not found"})
+            return
+        }
+        res.status(200).json({message:"Found successfully",transactions:isTransExists})
+    } catch (error) {
+        res.status(500).json({mesaage:error.mesaage,error})       
+    }
+}
+
+export async function singleTrans(req,res){
+    try {
+        const {id} = req.params
+
+        const date = new Date()
+        const getYear = date.getFullYear();
+        const getMonth = date.getMonth();
+
+        const isTransExists = await prisma.transaction.findUnique({
+            where:{
+                id,
+                createdAt:{
+                    lte: new Date(getYear,getMonth+1,1),
+                    gte: new Date(getYear,getMonth,1)
+                }
+            }
+        })
+
+        if(!isTransExists){
+            res.status(404).json({message:"Transaction not found"})
+            return
+        }
+        res.status(200).json({message:"Found successfully",transaction:isTransExists})
+    } catch (error) {
+        res.status(500).json({mesaage:error.mesaage,error})       
+    }
+}
+
+
+export async function recentTrns(req,res){
+    try {
+        const {id} = req.params
+        const date = new Date()
+        const getYear = date.getFullYear();
+        const getMonth = date.getMonth();
+
+        const isTransExists = await prisma.transaction.findMany({
+            skip:0,
+            take:3,
+            orderBy:[{createdAt:"desc"}],
+            where:{
+                userId:id,
+                createdAt:{
+                    lte: new Date(getYear,getMonth+1,1),
+                    gte: new Date(getYear,getMonth,1)
+                }
+            }
+        })
+
+        if(!isTransExists){
+            res.status(404).json({message:"Transaction not found"})
+            return
+        }
+        res.status(200).json({message:"Found successfully",transactions:isTransExists})
+    } catch (error) {
+        res.status(500).json({mesaage:error.mesaage,error})       
+    }
+} 

@@ -1,11 +1,13 @@
 import React,{ useContext,createContext, useState,useEffect} from "react";
 
 type Inputs = {
-    dateOne:Date,
+    payetAt:Date,
+    categoryId:string
 }
 
 const initialState : Inputs = {
-    dateOne:new Date(),
+    payetAt:new Date(),
+    categoryId:""
 }
 
 interface ContextType {
@@ -13,22 +15,22 @@ interface ContextType {
     setData: React.Dispatch<React.SetStateAction<Inputs | null>>
 }
 
-const DateContext = createContext<ContextType|undefined>(undefined)
+const TransContext = createContext<ContextType|undefined>(undefined)
 
 
-export function DateDataProvider ({children}:{children:React.ReactNode}){
+export function TransDataProvider ({children}:{children:React.ReactNode}){
     const [data,setData] = useState<Inputs | null>(initialState)
     useEffect(()=>{
     },[data])
     return(
-        <DateContext.Provider value={{data,setData}}>
+        <TransContext.Provider value={{data,setData}}>
             {children}
-        </DateContext.Provider>
+        </TransContext.Provider>
     )
 }
 
-export const useDate = ()=>{
-    const context = useContext(DateContext)
+export const useTranData = ()=>{
+    const context = useContext(TransContext)
     if (!context) {
         throw new Error('Context must be used within a UserProvider');
       }

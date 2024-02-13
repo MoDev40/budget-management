@@ -1,7 +1,7 @@
 import { prisma } from "../config/config.js"
 export async function createUser (req,res){
     try{
-       const {uid,username} = req.body
+       const {uid,username,isAdmin} = req.body
        console.log("Comming");
        const isUserExists = await prisma.user.findUnique({
         where:{
@@ -17,7 +17,8 @@ export async function createUser (req,res){
        const user = await prisma.user.create({
         data:{
             id:uid,
-            username:username
+            username:username,
+            isAdmin
         }
        })
 

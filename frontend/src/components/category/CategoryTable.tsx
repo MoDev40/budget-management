@@ -38,17 +38,15 @@ return (
     <TableCaption>A list of your fee categoies.</TableCaption>
     <TableHeader>
         <TableRow>
-        <TableHead>Name</TableHead>
-        <TableHead colSpan={3}>Price</TableHead>
+        <TableHead colSpan={5}>Name</TableHead>
         </TableRow>
     </TableHeader>
     <TableBody>
         {isLoading || !data? <IoReload  size={30} className="animate-spin text-center"/> : data.categories.map((category) => (
         <TableRow key={category.id}>
             <TableCell>{category.name}</TableCell>
-            <TableCell>{category.price ? category.price  : "0.00"}</TableCell>
-            <TableCell><UpadeteCategory category={category}/></TableCell>
-            <TableCell><Button onClick={()=>handleDelete(category.id,user?.uid as string)} variant="destructive">{deleteLoad ?<IoReload size={15} className="animate-spin"/>:<MdDelete/>}</Button></TableCell>
+            <TableCell className="text-right"><UpadeteCategory category={category}/></TableCell>
+            <TableCell className="text-right"><Button onClick={()=>handleDelete(category.id,user?.uid as string)} variant="destructive">{deleteLoad ?<IoReload size={15} className="animate-spin"/>:<MdDelete/>}</Button></TableCell>
         </TableRow>
         ))}
     </TableBody>

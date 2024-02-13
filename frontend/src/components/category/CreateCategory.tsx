@@ -15,7 +15,6 @@ const CreateCategory = () => {
     const [createMutate,{isLoading}] = useCreateCategoryMutation()
     const categSchema = z.object({
         name:z.string(),
-        price:z.string().optional(),
         userId:z.string().readonly(),
     })
     type Inputs = z.infer<typeof categSchema>
@@ -24,9 +23,9 @@ const CreateCategory = () => {
         userId:user?.uid,
     }})
     
-    const onsSubmit : SubmitHandler<Inputs> = async(data)=>{
-        const {userId,name,price} = data
-        const createdData : ReqBody = {userId,name,price:Number(price)}
+    const onSubmit : SubmitHandler<Inputs> = async(data)=>{
+        const {userId,name} = data
+        const createdData : ReqBody = {userId,name}
         await createMutate(createdData).unwrap().then((data)=>{
             toast(data.message)
             form.reset()
@@ -40,7 +39,7 @@ const CreateCategory = () => {
         <PopoverTrigger><Button variant="outline">+</Button></PopoverTrigger>
         <PopoverContent>
             <Form {...form}>
-                <form className="flex flex-col space-y-3" onSubmit={form.handleSubmit(onsSubmit)}>
+                <form className="flex flex-col space-y-3" onSubmit={form.handleSubmit(onSubmit)}>
                 <FormField
                 control={form.control}
                 name="userId"
@@ -48,7 +47,7 @@ const CreateCategory = () => {
                 <FormItem>
                     <FormLabel>id</FormLabel>
                     <FormControl>
-                        <Input type="text" {...field}/>
+                        <Input type="text" {...field} readOnly />
                     </FormControl>
                     <FormMessage className="p-0 text-right"/>
                 </FormItem>
@@ -63,20 +62,6 @@ const CreateCategory = () => {
                     <FormLabel>name</FormLabel>
                     <FormControl>
                         <Input type="text" placeholder="Like Rent Fee" {...field}/>
-                    </FormControl>
-                    <FormMessage className="p-0 text-right"/>
-                </FormItem>
-                )}
-                />
-                <FormField
-                control={form.control}
-                name="price"
-                defaultValue=""
-                render={({field})=>(
-                <FormItem>
-                    <FormLabel>price</FormLabel>
-                    <FormControl>
-                        <Input type="text" placeholder="0.00" {...field}/>
                     </FormControl>
                     <FormMessage className="p-0 text-right"/>
                 </FormItem>

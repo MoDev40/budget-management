@@ -5,6 +5,8 @@ import { useGetUserBudgetQuery } from "../../../strore/features/budgetSlice"
 import { useAuth } from "@/hooks/AuthUser"
 import { useEffect } from "react"
 import UpdateBudge from "../budge/UpdateBudge"
+import CreateTransaction from "../transaction/CreateTransaction"
+import RecentTrans from "../transaction/RecentTrans"
 
 const BottomBar = () => {
   const {user} = useAuth()
@@ -35,14 +37,11 @@ const BottomBar = () => {
             <CreateBudge/>
           }
         </div>
-        <div className="flex flex-col justify-center bg-black border border-[#ccc] p-10 rounded w-full">
-          <ul className="text-white">
-            <li>Hello</li>
-            <li>Hello</li>
-            <li>Hello</li>
-            <li>Hello</li>
-            <li>Hello</li>
-          </ul>
+        <div className="flex flex-col justify-center border border-[#ccc] p-10 rounded w-full">
+          <div className="flex flex-col w-full space-y-2">
+          <CreateTransaction/>
+          <RecentTrans/>
+          </div>
         </div>
       </div>
     </div>

@@ -19,7 +19,6 @@ const UpadeteCategory : React.FC<Props> = ({category}) => {
     const [updateMutate,{isLoading}] =  useUpdateCategoryMutation()
     const categSchema = z.object({
         name:z.string(),
-        price:z.string().optional(),
         userId:z.string().readonly(),
     })
     type Inputs = z.infer<typeof categSchema>
@@ -27,12 +26,11 @@ const UpadeteCategory : React.FC<Props> = ({category}) => {
     const form = useForm<Inputs>({resolver:zodResolver(categSchema),defaultValues:{
         userId:category.userId,
         name:category.name,
-        price:category.price?.toString()
     }})
 
-    const onsSubmit : SubmitHandler<Inputs> = async(data)=>{
-        const {userId,name,price} = data
-        const updatedData : ReqBody = {userId,name,price:Number(price)}
+    const onSubmit : SubmitHandler<Inputs> = async(data)=>{
+        const {userId,name} = data
+        const updatedData : ReqBody = {userId,name}
         await updateMutate({id:category.id,data:updatedData}).unwrap().then((data)=>{
             toast(data.message)
         }).catch((error:ErrorRes)=>{
@@ -45,7 +43,7 @@ const UpadeteCategory : React.FC<Props> = ({category}) => {
         <PopoverTrigger><Button variant="outline"><FaEdit/></Button></PopoverTrigger>
         <PopoverContent>
             <Form {...form}>
-                <form className="flex flex-col space-y-3" onSubmit={form.handleSubmit(onsSubmit)}>
+                <form className="flex flex-col space-y-3" onSubmit={form.handleSubmit(onSubmit)}>
                 <FormField
                 control={form.control}
                 name="userId"
@@ -53,7 +51,7 @@ const UpadeteCategory : React.FC<Props> = ({category}) => {
                 <FormItem>
                     <FormLabel>id</FormLabel>
                     <FormControl>
-                        <Input type="text" {...field}/>
+                        <Input type="text" {...field} readOnly/>
                     </FormControl>
                     <FormMessage className="p-0 text-right"/>
                 </FormItem>
@@ -68,20 +66,6 @@ const UpadeteCategory : React.FC<Props> = ({category}) => {
                     <FormLabel>name</FormLabel>
                     <FormControl>
                         <Input type="text" placeholder="Like Rent Fee" {...field}/>
-                    </FormControl>
-                    <FormMessage className="p-0 text-right"/>
-                </FormItem>
-                )}
-                />
-                <FormField
-                control={form.control}
-                name="price"
-                defaultValue=""
-                render={({field})=>(
-                <FormItem>
-                    <FormLabel>price</FormLabel>
-                    <FormControl>
-                        <Input type="text" placeholder="0.00" {...field}/>
                     </FormControl>
                     <FormMessage className="p-0 text-right"/>
                 </FormItem>

@@ -6,7 +6,6 @@ import {z} from "zod"
 import { Input } from "../ui/input"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { IoReload } from "react-icons/io5"
-import { useDate } from "@/hooks/DateContext"
 import { toast } from "sonner"
 import { useAuth } from "@/hooks/AuthUser"
 import { useCreateBudgetMutation } from "../../../strore/features/budgetSlice"
@@ -30,7 +29,6 @@ export type SuccRes = {
 const CreateBudge = () => {
     const [createBudge,{isLoading}] = useCreateBudgetMutation()
     const {user} = useAuth()
-    const {data:dates} = useDate()
     const budgeSchema = z.object({
         userId:z.string(),
         amount:z.string(),
@@ -43,7 +41,7 @@ const CreateBudge = () => {
 
     const onSubmit : SubmitHandler<Inputs> = async(data)=>{
         const {amount,userId} =  data
-        const reqBody : ReqBody = {amount:Number(amount),userId,startDate:new Date(dates?.dateOne as Date)}
+        const reqBody : ReqBody = {amount:Number(amount),userId,startDate:new Date()}
         await createBudge(reqBody).unwrap().then((data:SuccRes)=>{
             toast(data.message)
             form.reset()

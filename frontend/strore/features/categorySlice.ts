@@ -7,7 +7,6 @@ interface Params {
 
 export interface ReqBody {
     name:string;
-    price:number | undefined;
     userId:string;
 }
 

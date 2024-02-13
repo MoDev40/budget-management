@@ -3,13 +3,12 @@ import {prisma}  from "../config/config.js"
 
 export async function createCategory(req,res){
     try {
-        const {name,price,userId} = req.body
+        const {name,userId} = req.body
         const id = await randomId()
         const createdCategory = await prisma.category.create({
             data:{
                 id,
                 name,
-                price,
                 userId
             }
         })
@@ -26,7 +25,7 @@ export async function createCategory(req,res){
 export async function updateCategory(req,res){
     try {
         const {id} = req.params
-        const {name,price,userId} = req.body
+        const {name,userId} = req.body
 
         const isCategoryExists = await prisma.category.findUnique({
             where:{
@@ -43,7 +42,6 @@ export async function updateCategory(req,res){
         const updatedCategory = await prisma.category.update({
             data:{
                 name,
-                price,
             },
             where:{
                 id,
