@@ -11,7 +11,7 @@ import { toast } from "sonner"
 import { useAuth } from "@/hooks/AuthUser"
 import { useCreateBudgetMutation } from "../../../strore/features/budgetSlice"
 
-interface ReqBody {
+export interface ReqBody {
     userId:string;
     amount:number;
     startDate:Date;

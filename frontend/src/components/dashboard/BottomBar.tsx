@@ -6,25 +6,6 @@ import { useAuth } from "@/hooks/AuthUser"
 import { useEffect } from "react"
 import UpdateBudge from "../budge/UpdateBudge"
 
-interface ResData {
-  message:string;
-  isBudgetExists:{
-      balance:{
-              id: string;
-              amount: number;
-              userId: string;
-              fromDate: Date;
-              toDate: Date;
-              budgetId: string;
-      }[]}&{
-          id: string;
-          amount: number;
-          startDate: Date;
-          endDate: Date;
-          userId: string;
-  }
-}
-
 const BottomBar = () => {
   const {user} = useAuth()
   const {data:budget,isFetching}= useGetUserBudgetQuery({id:user?.uid as string})
@@ -35,12 +16,12 @@ const BottomBar = () => {
     <div className="w-full md:px-4 mt-5 space-y-10 px-10">
       <div className="flex flex-row  md:px-2 items-center justify-between">
         <div className="flex flex-col  space-y-1">
-          <Button className="flex flex-row space-x-3" variant="outline"><LucideBadgeDollarSign/><span>${budget&& budget.isBudgetExists.amount}</span><p className="hidden md:block">Your Budget/Month</p></Button>
-          <p className="font-thin text-sm">Ends: {budget&& budget?.isBudgetExists?.endDate.split("T")[0]}</p>
+          <Button className="flex flex-row space-x-3" variant="outline"><LucideBadgeDollarSign/><span>${isFetching ? "...." : budget&& budget.isBudgetExists.amount}</span><p className="hidden md:block">Your Budget/Month</p></Button>
+          <p className="font-thin text-sm">Ends: {budget&& budget?.isBudgetExists?.endDate.toDateString()}</p>
         </div>
         <div className="flex my-2 flex-col space-y-1">
           <Button className="flex flex-row space-x-3" variant="outline"><LucideBadgeDollarSign/><span>${isFetching ? "...." : budget&& budget.isBudgetExists.balance[0].amount }</span><p className="hidden md:block">Your Balance/Month</p></Button>
-          <p className="font-thin text-sm">Ends: {budget&& budget.isBudgetExists.balance[0]?.toDate.split("T")[0]}</p>
+          <p className="font-thin text-sm">Ends: {budget&& budget.isBudgetExists.balance[0]?.toDate.toDateString()}</p>
         </div>
       </div>
       <div className="flex  flex-col md:flex-row justify-between md:space-y-0 space-y-5 md:space-x-4 h-64 md:h-96">
