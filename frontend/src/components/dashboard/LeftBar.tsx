@@ -2,7 +2,7 @@ import { useEffect } from "react"
 import { Props } from "./TopBar"
 import { Link } from "react-router-dom";
 import { Label } from "../ui/label";
-import { FaHouse, FaMoneyBillTransfer, FaMoneyBills, FaUserGroup } from "react-icons/fa6";
+import { FaHouse, FaMoneyBillTransfer, FaMoneyBills, } from "react-icons/fa6";
 import { Settings } from "lucide-react";
 import {GrDocumentConfig} from "react-icons/gr"
 const LeftBar : React.FC<Props>= ({togle,setTogle}) => {
