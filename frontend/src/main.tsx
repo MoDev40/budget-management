@@ -14,6 +14,7 @@ import { DateDataProvider } from './hooks/DateContext.tsx'
 import { AuthProvider } from './hooks/AuthUser.tsx'
 import {store} from "../strore/store.ts"
 import { Provider } from 'react-redux'
+import CategoryPage from './pages/dashboard/CategoryPage.tsx'
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
       {
         path:"/dashboard/landing",
         element:<LandingPage/>
+      },
+      {
+        path:"/dashboard/category",
+        element:<CategoryPage/>
       }
     ]
   }

@@ -17,7 +17,7 @@ export async function createCategory(req,res){
             res.status(400).json({message:"Error try again"})
             return
         }
-        res.status(201).json(createdCategory)
+        res.status(201).json({message:"Created Successfully"})
     } catch (error) {
         res.status(500).json({message:error.mesaage,error})
     }
@@ -54,7 +54,7 @@ export async function updateCategory(req,res){
             res.status(400).json({message:"Error try again"})
             return
         }
-        res.status(200).json(updatedCategory)
+        res.status(200).json({message:"Updated Successfully"})
     } catch (error) {
         res.status(500).json({message:error.mesaage,error})
     }
@@ -92,6 +92,25 @@ export async function deleteCategory(req,res){
             return
         }
         res.status(200).json({message:"Category deleted successfully"})
+    } catch (error) {
+        res.status(500).json({message:error.message,error})
+    }
+}
+
+export async function getCategory (req,res){
+    try {
+        const {id} = req.params
+        const isCategoryExists = await prisma.category.findMany({
+            where:{
+                userId:id,
+            }
+        })
+
+        if(!isCategoryExists){
+            res.status(404).json({message:"Category not found"})
+            return
+        }
+        res.status(200).json({categories:isCategoryExists,message:"Founded successfully"})
     } catch (error) {
         res.status(500).json({message:error.message,error})
     }

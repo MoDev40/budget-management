@@ -43,9 +43,10 @@ const CreateBudge = () => {
 
     const onSubmit : SubmitHandler<Inputs> = async(data)=>{
         const {amount,userId} =  data
-        const reqBody : ReqBody = {amount:Number(amount),userId,startDate:dates?.dateOne as Date}
+        const reqBody : ReqBody = {amount:Number(amount),userId,startDate:new Date(dates?.dateOne as Date)}
         await createBudge(reqBody).unwrap().then((data:SuccRes)=>{
             toast(data.message)
+            form.reset()
         }).catch((error:ErrorRes)=>{
             toast(error.data.message)
         })
@@ -73,6 +74,7 @@ const CreateBudge = () => {
             <FormField
             control={form.control}
             name="amount"
+            defaultValue=""
             render={({field})=>(
                 <FormItem>
                     <FormLabel>Amount</FormLabel>

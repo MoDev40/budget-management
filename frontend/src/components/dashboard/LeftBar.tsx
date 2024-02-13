@@ -11,7 +11,9 @@ const LeftBar : React.FC<Props>= ({togle,setTogle}) => {
   },[togle])
 
   const handleClose : ()=> void = ()=>{
-    setTogle(!togle)
+    if(togle){
+      setTogle(!togle)
+    }
   }
   return (
     <div className={togle ? "h-screen block p-5  bg-black" : "md:block hidden p-5  h-screen   bg-black"}>
@@ -25,13 +27,13 @@ const LeftBar : React.FC<Props>= ({togle,setTogle}) => {
         <li>
           <Link className="flex flex-row items-center space-x-3" onClick={handleClose} to={"/dashboard/landing"}>
             <GrDocumentConfig size={25}/>
-            <Label>Overview</Label>
+            <Label>Configure</Label>
           </Link>
         </li>
         <li>
-          <Link className="flex flex-row items-center space-x-3" onClick={handleClose} to={""}>
+          <Link className="flex flex-row items-center space-x-3" onClick={handleClose} to={"/dashboard/category"}>
             <FaMoneyBills size={25}/>
-            <Label>Types</Label>
+            <Label>Fee Types</Label>
           </Link>
         </li>
         <li>

@@ -38,6 +38,7 @@ const UpdateBudge = () => {
         const reqBody : ReqBody = {amount:Number(amount),userId}
         await UpdateBudget({data:reqBody,id:budget?.isBudgetExists?.id as string}).unwrap().then((data:SuccRes)=>{
             toast(data.message)
+            form.reset()
         }).catch((error:ErrorRes)=>{
             toast(error.data.message)
         })
@@ -65,6 +66,7 @@ const UpdateBudge = () => {
             <FormField
             control={form.control}
             name="amount"
+            defaultValue=""
             render={({field})=>(
                 <FormItem>
                     <FormLabel>Amount</FormLabel>

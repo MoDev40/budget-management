@@ -2,6 +2,7 @@ import {createApi,fetchBaseQuery} from "@reduxjs/toolkit/query/react"
 import { BASE_URL } from "../baseUrl"
 import { ReqBody as CreateParams} from "@/components/budge/CreateBudge"
 import { ReqBody as DataShape} from "@/components/budge/UpdateBudge"
+import { ResponseData } from "./categorySlice"
 
 type Params = {
     id:string,
@@ -37,12 +38,12 @@ export const budgetSlice = createApi({
     tagTypes:["budget"],
     endpoints:(builder)=>({
         getUserBudget:builder.query<ResData,Params>({
-            query:(id)=>({
+            query:({id})=>({
                 url:`/user-budget/${id}`
             }),
             providesTags:["budget"]
         }),
-        createBudget:builder.mutation<any,CreateParams>({
+        createBudget:builder.mutation<ResponseData,CreateParams>({
             query:(data)=>({
                 url:"create-budget",
                 method:"POST",
@@ -50,7 +51,7 @@ export const budgetSlice = createApi({
             }),
             invalidatesTags:["budget"]
         }),
-        updateBudget:builder.mutation<any,UpdateParams>({
+        updateBudget:builder.mutation<ResponseData,UpdateParams>({
             query:({id,data})=>({
                 url:`/update-budget/${id}`,
                 method:"PUT",
