@@ -44,7 +44,7 @@ const Profile = () => {
                 <FormItem className="space-y-0">
                   <FormLabel>Username</FormLabel>
                   <FormControl>
-                    <Input placeholder="username" {...field} />
+                    <Input placeholder="username" type="text" {...field} readOnly />
                   </FormControl>
                   <FormMessage className="p-0 text-right"/>
                 </FormItem>
@@ -58,7 +58,7 @@ const Profile = () => {
                 <FormItem className="space-y-0">
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="Email" {...field} />
+                    <Input type="email" placeholder="Email" {...field} readOnly/>
                   </FormControl>
                   <FormMessage className="p-0 text-right"/>
                 </FormItem>
@@ -72,7 +72,7 @@ const Profile = () => {
                 <FormItem className="space-y-0">
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input placeholder="Password" {...field} type="password"/>
+                    <Input placeholder="Password" {...field} readOnly type="password"/>
                   </FormControl>
                   <FormMessage className="p-0 text-right"/>
                 </FormItem>
