@@ -1,11 +1,19 @@
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { useAuth } from "@/hooks/AuthUser"
 import { zodResolver } from "@hookform/resolvers/zod"
 import {SubmitHandler, useForm } from "react-hook-form"
+import { useCurentUserQuery } from "../../../strore/features/authSlice"
 import { z } from "zod"
+import { useEffect } from "react"
 
 const Profile = () => {
+  const {user} = useAuth()
+  const {data} = useCurentUserQuery({id:user?.uid as string})
+  useEffect(()=>{
+
+  },[data])
   const userSchema = z.object({
     username:z.string().min(2,{message:"Username must be at least 2 characters."}),
     email:z.string().email({message:"Enter Valid Email"}),
@@ -31,6 +39,7 @@ const Profile = () => {
             <FormField
               control={form.control}
               name="username"
+              defaultValue={data?.user.username}
               render={({ field }) => (
                 <FormItem className="space-y-0">
                   <FormLabel>Username</FormLabel>
@@ -44,6 +53,7 @@ const Profile = () => {
               <FormField
               control={form.control}
               name="email"
+              defaultValue={user?.email as string}
               render={({ field }) => (
                 <FormItem className="space-y-0">
                   <FormLabel>Email</FormLabel>
@@ -57,6 +67,7 @@ const Profile = () => {
             <FormField
               control={form.control}
               name="password"
+              defaultValue="........"
               render={({ field }) => (
                 <FormItem className="space-y-0">
                   <FormLabel>Password</FormLabel>
@@ -67,9 +78,9 @@ const Profile = () => {
                 </FormItem>
               )}
               />
-            <div className="my-2">
+            {/* <div className="my-2">
             <Button type="submit" >Update</Button>
-            </div>
+            </div> */}
             </form>
           </Form>
         </div>

@@ -10,10 +10,13 @@ import DashboardPage from './pages/dashboard/DashboardPage.tsx'
 import ProfilePage from './pages/dashboard/ProfilePage.tsx'
 import HomePage from './pages/HomePage.tsx'
 import LandingPage from './pages/dashboard/LandingPage.tsx'
-import { DateDataProvider } from './hooks/DateContext.tsx'
+import { TransDataProvider } from './hooks/TransContext.tsx'
 import { AuthProvider } from './hooks/AuthUser.tsx'
 import {store} from "../strore/store.ts"
 import { Provider } from 'react-redux'
+import CategoryPage from './pages/dashboard/CategoryPage.tsx'
+import HistoryPage from './pages/dashboard/HistoryPage.tsx'
+import UpdateTransaction from './components/transaction/UpdateTransaction.tsx'
 
 const router = createBrowserRouter([
   {
@@ -37,8 +40,20 @@ const router = createBrowserRouter([
         element:<ProfilePage/>
       },
       {
-        path:"/dashboard/landing",
+        path:"/dashboard/configure",
         element:<LandingPage/>
+      },
+      {
+        path:"/dashboard/category",
+        element:<CategoryPage/>
+      },
+      { 
+        path:"/dashboard/history",
+        element:<HistoryPage/>
+      },
+      { 
+        path:"/dashboard/transaction/:id",
+        element:<UpdateTransaction/>
       }
     ]
   }
@@ -47,11 +62,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <Provider store={store}>
     <AuthProvider>
-    <DateDataProvider>
+    <TransDataProvider>
     <RouterProvider router={router}/>
     <Toaster/>
     <App />
-    </DateDataProvider>
+    </TransDataProvider>
     </AuthProvider>
     </Provider>
   </React.StrictMode>,

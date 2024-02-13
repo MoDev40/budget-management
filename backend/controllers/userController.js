@@ -1,7 +1,8 @@
 import { prisma } from "../config/config.js"
+
 export async function createUser (req,res){
     try{
-       const {uid,username} = req.body
+       const {uid,username,isAdmin} = req.body
        console.log("Comming");
        const isUserExists = await prisma.user.findUnique({
         where:{
@@ -17,7 +18,8 @@ export async function createUser (req,res){
        const user = await prisma.user.create({
         data:{
             id:uid,
-            username:username
+            username:username,
+            isAdmin
         }
        })
 
@@ -46,7 +48,8 @@ export async function getUser(req,res){
             res.status(400).json({message:"Error User Not Found"})
             return
         }
-        res.status(200).json(isUserExists)
+        res.status(200).json({message:"User Founded",user:isUserExists})
+
     } catch (error) {
         res.status(500).json({mesaage:error.mesaage,error})
     }

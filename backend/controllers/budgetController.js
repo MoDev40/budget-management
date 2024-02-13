@@ -144,7 +144,7 @@ export async function updateBudget(req,res){
             res.status(400).json({message:"Error updating budget Try again"})
             return
         }
-        res.status(201).json({message:"Updated successfully",updatedBudget})
+        res.status(201).json({message:"Updated successfully"})
     } catch (error) {
         res.status(500).json({mesaage:error.mesaage,error})
     }

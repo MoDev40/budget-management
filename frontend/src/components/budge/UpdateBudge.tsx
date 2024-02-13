@@ -11,7 +11,7 @@ import { useAuth } from "@/hooks/AuthUser"
 import { useUpdateBudgetMutation, useGetUserBudgetQuery } from "../../../strore/features/budgetSlice"
 import { ErrorRes, SuccRes } from "./CreateBudge"
 
-interface ReqBody {
+export interface ReqBody {
     userId:string;
     amount:number;
 }
@@ -29,15 +29,16 @@ const UpdateBudge = () => {
     type Inputs = z.infer<typeof budgeSchema>
     const form = useForm<Inputs>({resolver:zodResolver(budgeSchema),defaultValues:{
         userId:user?.uid,
-        amount:budget?.isBudgetExists?.amount
+        amount:budget?.isBudgetExists?.amount.toString()
     }})
 
 
     const onSubmit : SubmitHandler<Inputs> = async(data)=>{
         const {amount,userId} =  data
         const reqBody : ReqBody = {amount:Number(amount),userId}
-        await UpdateBudget({data:reqBody,id:budget?.isBudgetExists?.id}).unwrap().then((data:SuccRes)=>{
+        await UpdateBudget({data:reqBody,id:budget?.isBudgetExists?.id as string}).unwrap().then((data:SuccRes)=>{
             toast(data.message)
+            form.reset()
         }).catch((error:ErrorRes)=>{
             toast(error.data.message)
         })
@@ -65,6 +66,7 @@ const UpdateBudge = () => {
             <FormField
             control={form.control}
             name="amount"
+            defaultValue=""
             render={({field})=>(
                 <FormItem>
                     <FormLabel>Amount</FormLabel>

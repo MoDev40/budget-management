@@ -11,7 +11,9 @@ const LeftBar : React.FC<Props>= ({togle,setTogle}) => {
   },[togle])
 
   const handleClose : ()=> void = ()=>{
-    setTogle(!togle)
+    if(togle){
+      setTogle(!togle)
+    }
   }
   return (
     <div className={togle ? "h-screen block p-5  bg-black" : "md:block hidden p-5  h-screen   bg-black"}>
@@ -23,28 +25,28 @@ const LeftBar : React.FC<Props>= ({togle,setTogle}) => {
           </Link>
         </li>
         <li>
-          <Link className="flex flex-row items-center space-x-3" onClick={handleClose} to={"/dashboard/landing"}>
+          <Link className="flex flex-row items-center space-x-3" onClick={handleClose} to={"/dashboard/configure"}>
             <GrDocumentConfig size={25}/>
-            <Label>Overview</Label>
+            <Label>Configure</Label>
           </Link>
         </li>
         <li>
-          <Link className="flex flex-row items-center space-x-3" onClick={handleClose} to={""}>
+          <Link className="flex flex-row items-center space-x-3" onClick={handleClose} to={"/dashboard/category"}>
             <FaMoneyBills size={25}/>
-            <Label>Types</Label>
+            <Label>Fee Types</Label>
           </Link>
         </li>
         <li>
-          <Link className="flex flex-row items-center space-x-3" onClick={handleClose} to={""}>
+          <Link className="flex flex-row items-center space-x-3" onClick={handleClose} to={"/dashboard/history"}>
             <FaMoneyBillTransfer size={25}/>
             <Label>History</Label>
           </Link>
         </li>
         <li>
-          <Link className="flex flex-row items-center space-x-3" onClick={handleClose} to={""}>
+          {/* <Link className="flex flex-row items-center space-x-3" onClick={handleClose} to={""}>
             <FaUserGroup size={25}/>
             <Label>Users</Label>
-          </Link>
+          </Link> */}
         </li>
         <li>
           <Link className="flex flex-row items-center space-x-3" onClick={handleClose} to={"/dashboard/profile"}>

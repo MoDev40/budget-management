@@ -1,27 +1,49 @@
 import {createApi,fetchBaseQuery} from "@reduxjs/toolkit/query/react"
 import { BASE_URL } from "../baseUrl"
+import { ReqBody as CreateParams} from "@/components/budge/CreateBudge"
+import { ReqBody as DataShape} from "@/components/budge/UpdateBudge"
+import { ResponseData } from "./categorySlice"
+
 type Params = {
     id:string,
 }
 
+
 interface UpdateParams extends Params {
-    data:{
-        userId:string;
-        amount:number;
-    }
+    data:DataShape
 }
+
+interface ResData {
+    message:string;
+    isBudgetExists:{
+        balance:{
+                id: string;
+                amount: number;
+                userId: string;
+                fromDate: Date;
+                toDate: Date;
+                budgetId: string;
+        }[]}&{
+            id: string;
+            amount: number;
+            startDate: Date;
+            endDate: Date;
+            userId: string;
+    }
+  }
+
 export const budgetSlice = createApi({
     reducerPath:"budgetApi",
     baseQuery:fetchBaseQuery({baseUrl:BASE_URL}),
     tagTypes:["budget"],
     endpoints:(builder)=>({
-        getUserBudget:builder.query({
-            query:({id}:Params)=>({
-                url:`/user-budget/${id}`
+        getUserBudget:builder.query<ResData,Params>({
+            query:({id})=>({
+                url:`user-budget/${id}`
             }),
             providesTags:["budget"]
         }),
-        createBudget:builder.mutation({
+        createBudget:builder.mutation<ResponseData,CreateParams>({
             query:(data)=>({
                 url:"create-budget",
                 method:"POST",
@@ -29,9 +51,9 @@ export const budgetSlice = createApi({
             }),
             invalidatesTags:["budget"]
         }),
-        updateBudget:builder.mutation({
-            query:({id,data}:UpdateParams)=>({
-                url:`/update-budget/${id}`,
+        updateBudget:builder.mutation<ResponseData,UpdateParams>({
+            query:({id,data})=>({
+                url:`update-budget/${id}`,
                 method:"PUT",
                 body:data
             }),
