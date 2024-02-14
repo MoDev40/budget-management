@@ -1,2 +1,2 @@
-import {backendApi} from "../src/lip/config"
+import {backendApi} from "@/lib/config"
 export const BASE_URL = backendApi+"api/"
