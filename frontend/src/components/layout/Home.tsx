@@ -15,7 +15,7 @@ const features = [
 
 const Home = () => {
   return (
-    <div className="w-[1120px] mx-auto">
+    <div className="w-full md:w-[1120px] md:mx-auto">
       <NavBar/>
       <div className=" min-h-screen flex flex-col justify-betwee ">
       {/* Hero Section */}
@@ -34,7 +34,7 @@ const Home = () => {
         <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-8 text-center">Key Features</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature, index) => (
-            <div key={index} className="flex flex-row space-x-4 items-center justify-center p-6 border border-gray-200 rounded-md">
+            <div key={index} className="flex flex-col space-y-3 items-center justify-center p-6 border border-gray-200 rounded-md">
               {feature.icon}
               <p className="ml-2 capitalize">{feature.description}</p>
             </div>
