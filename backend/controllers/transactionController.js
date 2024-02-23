@@ -126,7 +126,9 @@ export async function cancelTransaction(req,res){
         const balance = await prisma.balance.findFirst({
             where:{
                 userId,
-                toDate:endDate
+                toDate:{
+                    lte:endDate
+                }
             }
         })
 

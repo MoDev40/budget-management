@@ -168,7 +168,7 @@ export async function getBudget (req,res){
         })
 
         if(!isBudgetExists){
-            res.status(404).json({message:"Budget not found"})
+            res.status(404).json({message:"Budget not found"+currentDate})
             return
         }
         res.status(200).json({message:"Budget Found",isBudgetExists})
