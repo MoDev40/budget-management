@@ -2,8 +2,7 @@
 CREATE TABLE "User" (
     "id" VARCHAR(36) NOT NULL,
     "username" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
-    "hashedPassword" TEXT NOT NULL,
+    "isAdmin" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -15,6 +14,7 @@ CREATE TABLE "Balance" (
     "userId" TEXT NOT NULL,
     "fromDate" TIMESTAMP(3) NOT NULL,
     "toDate" TIMESTAMP(3) NOT NULL,
+    "budgetId" TEXT NOT NULL,
 
     CONSTRAINT "Balance_pkey" PRIMARY KEY ("id")
 );
@@ -23,9 +23,9 @@ CREATE TABLE "Balance" (
 CREATE TABLE "Transaction" (
     "id" VARCHAR(36) NOT NULL,
     "amount" DOUBLE PRECISION NOT NULL,
-    "description" TEXT NOT NULL,
-    "fromDate" TIMESTAMP(3) NOT NULL,
-    "toDate" TIMESTAMP(3) NOT NULL,
+    "description" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "payedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "categoryId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
 
@@ -37,7 +37,6 @@ CREATE TABLE "Category" (
     "id" VARCHAR(36) NOT NULL,
     "name" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
-    "price" DOUBLE PRECISION,
 
     CONSTRAINT "Category_pkey" PRIMARY KEY ("id")
 );
@@ -47,7 +46,7 @@ CREATE TABLE "Goal" (
     "id" VARCHAR(36) NOT NULL,
     "amount" DOUBLE PRECISION NOT NULL,
     "dueDate" TIMESTAMP(3) NOT NULL,
-    "achieved" BOOLEAN NOT NULL,
+    "achieved" BOOLEAN NOT NULL DEFAULT true,
     "userId" TEXT NOT NULL,
 
     CONSTRAINT "Goal_pkey" PRIMARY KEY ("id")
@@ -65,7 +64,10 @@ CREATE TABLE "Budget" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+CREATE UNIQUE INDEX "Balance_budgetId_key" ON "Balance"("budgetId");
+
+-- AddForeignKey
+ALTER TABLE "Balance" ADD CONSTRAINT "Balance_budgetId_fkey" FOREIGN KEY ("budgetId") REFERENCES "Budget"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Balance" ADD CONSTRAINT "Balance_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

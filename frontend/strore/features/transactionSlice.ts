@@ -30,7 +30,7 @@ export interface Transaction {
     categoryId: string;
 }
 
-type Trans = {
+export type Trans = {
     transaction:Transaction
 }
 

@@ -13,8 +13,8 @@ import { useGetSingleTransQuery, useUpdateTransMutation } from "../../../strore/
 import { IoReload } from "react-icons/io5";
 import { ErrorRes } from "../budge/CreateBudge";
 import { Params, useNavigate, useParams } from "react-router-dom";
-import { Skeleton } from "../ui/skeleton";
-import { useEffect } from "react";
+import { useEffect} from "react";
+import { Loader } from "lucide-react";
 
 export interface ReqBody {
     amount:number,
@@ -42,8 +42,6 @@ const UpdateTransaction = () => {
     type Inputs = z.infer<typeof transSchema>
     const form = useForm<Inputs>({resolver:zodResolver(transSchema),defaultValues:{
         userId:user?.uid,
-        amount:transaction?.transaction?.amount.toString(),
-        description:transaction?.transaction?.description as string
     }})
 
     const onSubmit : SubmitHandler<Inputs> = async (data)=>{
@@ -63,7 +61,7 @@ const UpdateTransaction = () => {
     return (
         isFetching
         ?
-        <Skeleton className="md:w-[1120px] w-[80%]"/>
+        <Loader className="animate-spin"/>
         :
         <div className="w-full md:w-[1120px] md:mx-auto p-5 ">
         <Form {...form}>
@@ -84,6 +82,7 @@ const UpdateTransaction = () => {
             <FormField
             control={form.control}
             name="description"
+            defaultValue={transaction?.transaction.description as string}
             render={({field})=>(
             <FormItem>
                 <FormLabel>description</FormLabel>
@@ -100,6 +99,7 @@ const UpdateTransaction = () => {
             <FormField
             control={form.control}
             name="amount"
+            defaultValue={transaction?.transaction.amount.toString()}
             render={({field})=>(
             <FormItem>
                 <FormLabel>amount</FormLabel>

@@ -2,17 +2,18 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input"
 import { useAuth } from "@/hooks/AuthUser"
 import { zodResolver } from "@hookform/resolvers/zod"
-import {SubmitHandler, useForm } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import { useCurentUserQuery } from "../../../strore/features/authSlice"
 import { z } from "zod"
 import { useEffect } from "react"
+import { Loader } from "lucide-react"
 
 const Profile = () => {
   const {user} = useAuth()
-  const {data} = useCurentUserQuery({id:user?.uid as string})
+  const {data,isLoading} = useCurentUserQuery({id:user?.uid as string})
   useEffect(()=>{
 
-  },[data])
+  },[data?.user])
   const userSchema = z.object({
     username:z.string().min(2,{message:"Username must be at least 2 characters."}),
     email:z.string().email({message:"Enter Valid Email"}),
@@ -24,17 +25,16 @@ const Profile = () => {
   type Inputs = z.infer<typeof userSchema>
   const form = useForm<Inputs>({resolver:zodResolver(userSchema)})
 
-  const onsubmit : SubmitHandler<Inputs> = async(data)=>{
-    console.log(data);
-  }
-
   return (
+    isLoading ?
+    <Loader className="animate-spin"/>
+    :
     <div className="flex flex-col md:w-[1120px] md:mx-auto md:p-10">
         <div className="bg-[#212023] shadow-md w-full rounded-tr rounded-tl py-2 h-2">
         </div>
         <div className="w-full bg-white shadow-sm">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onsubmit)} className="p-10  md:p-16 space-y-3">
+            <form className="p-10  md:p-16 space-y-3">
             <FormField
               control={form.control}
               name="username"
