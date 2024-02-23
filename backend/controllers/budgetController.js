@@ -161,7 +161,9 @@ export async function getBudget (req,res){
         const isBudgetExists = await prisma.budget.findFirst({
             where:{
                 userId:id,
-                endDate:new Date(getFullYear,getMonth+1,1)
+                endDate:{
+                    lte:new Date(getFullYear,getMonth+1,1)
+                }
             },include:{
                 balance:true
             }
