@@ -128,7 +128,9 @@ export async function updateBudget(req,res){
             where:{
                 id,
                 userId,
-                endDate
+                endDate:{
+                    lte:endDate
+                }
             }
         })
         if(!updatedBudget){
@@ -140,7 +142,6 @@ export async function updateBudget(req,res){
                     id:isBudgetExists.balance[0].id
                 }
             })
-            console.log(balanceAmount);
             res.status(400).json({message:"Error updating budget Try again"})
             return
         }
