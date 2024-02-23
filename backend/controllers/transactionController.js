@@ -131,7 +131,7 @@ export async function cancelTransaction(req,res){
         })
 
         if(!balance){
-            res.status(404).json({message:"Error try again"})
+            res.status(404).json({message:"Error balance try again"})
             return
         }
 
@@ -141,7 +141,7 @@ export async function cancelTransaction(req,res){
         const increacedBalance = await increaceBalance(userId,updatedAmount,balance.id)
 
         if(!increacedBalance){
-            res.status(400).json({message:"Error try again"})
+            res.status(400).json({message:"Error increase balance try again"})
             return
         }
 
@@ -152,7 +152,7 @@ export async function cancelTransaction(req,res){
         })
 
         if(!canceled){
-            res.status(400).json({message:"Error try again"})
+            res.status(400).json({message:"Error cancel transaction try again"})
             return
         }
 
