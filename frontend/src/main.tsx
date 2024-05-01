@@ -10,11 +10,11 @@ import ProfilePage from './pages/dashboard/ProfilePage.tsx'
 import HomePage from './pages/HomePage.tsx'
 import LandingPage from './pages/dashboard/LandingPage.tsx'
 import { AuthProvider } from './hooks/AuthUser.tsx'
-import {store} from "../strore/store.ts"
 import { Provider } from 'react-redux'
 import CategoryPage from './pages/dashboard/CategoryPage.tsx'
 import HistoryPage from './pages/dashboard/HistoryPage.tsx'
 import UpdateTransaction from './components/transaction/UpdateTransaction.tsx'
+import { store } from './strore/store.ts'
 
 const router = createBrowserRouter([
   {

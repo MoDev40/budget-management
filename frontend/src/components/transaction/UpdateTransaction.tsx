@@ -7,8 +7,8 @@ import { IoReload } from "react-icons/io5";
 import { Params, useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { z } from "zod";
-import { useGetCategoryQuery } from "../../../strore/features/categorySlice";
-import { useGetSingleTransQuery, useUpdateTransMutation } from "../../../strore/features/transactionSlice";
+import { useGetCategoryQuery } from "@/strore/features/categorySlice";
+import { useGetSingleTransQuery, useUpdateTransMutation } from "@/strore/features/transactionSlice";
 import { Button } from "../ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
@@ -22,7 +22,7 @@ const UpdateTransaction = () => {
     const navigate = useNavigate()
     const params = useParams<Params>()
     const [updateTranMutate,{isLoading}] = useUpdateTransMutation()
-    const {data:categories} = useGetCategoryQuery({id:user?.uid as string})
+    const {data:categories} = useGetCategoryQuery(user?.uid as string)
     const {data:transaction,isLoading:isFetching} = useGetSingleTransQuery(params.id as string)
 
     const transSchema = z.object({

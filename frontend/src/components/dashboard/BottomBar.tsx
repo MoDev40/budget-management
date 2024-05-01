@@ -1,6 +1,6 @@
 import { useAuth } from "@/hooks/AuthUser"
 import { LucideBadgeDollarSign, Wallet } from "lucide-react"
-import { useGetUserBudgetQuery } from "../../../strore/features/budgetSlice"
+import { useGetUserBudgetQuery } from "@/strore/features/budgetSlice"
 import CreateBudge from "../budge/CreateBudge"
 import UpdateBudge from "../budge/UpdateBudge"
 import CreateTransaction from "../transaction/CreateTransaction"

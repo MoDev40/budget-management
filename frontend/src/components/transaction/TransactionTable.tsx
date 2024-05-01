@@ -12,7 +12,7 @@ import { IoReload } from "react-icons/io5"
 import { MdCancel, MdDelete } from "react-icons/md"
 import { Link } from "react-router-dom"
 import { toast } from "sonner"
-import { useCancelTransMutation, useDeleteTransMutation, useGetUserTransQuery } from "../../../strore/features/transactionSlice"
+import { useCancelTransMutation, useDeleteTransMutation, useGetUserTransQuery } from "@/strore/features/transactionSlice"
 import { Button } from "../ui/button"
 import { ErrorRes } from "@/types/interfaces"
   

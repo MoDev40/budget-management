@@ -7,18 +7,17 @@ import { SubmitHandler, useForm } from "react-hook-form"
 import { z } from "zod"
 import { Textarea } from "../ui/textarea";
 import { toast } from "sonner";
-import { useCreateTransMutation } from "../../../strore/features/transactionSlice";
+import { useCreateTransMutation } from "@/strore/features/transactionSlice";
 import { IoReload } from "react-icons/io5";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
-import { ErrorRes } from "../budge/CreateBudge";
-import { useGetCategoryQuery } from "../../../strore/features/categorySlice"
+import { useGetCategoryQuery } from "@/strore/features/categorySlice"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { TransactionInputs } from "@/types/interfaces";
+import { ErrorRes, TransactionInputs } from "@/types/interfaces";
 
 const CreateTransaction = () => {
     const [createTranMutate,{isLoading}] = useCreateTransMutation()
     const {user} = useAuth()
-    const {data:categories} = useGetCategoryQuery({id:user?.uid as string})
+    const {data:categories} = useGetCategoryQuery(user?.uid as string)
 
     const transSchema = z.object({
         amount:z.string(),

@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { IoReload } from "react-icons/io5"
 import { toast } from "sonner"
 import { useAuth } from "@/hooks/AuthUser"
-import { useCreateBudgetMutation } from "../../../strore/features/budgetSlice"
+import { useCreateBudgetMutation } from "@/strore/features/budgetSlice"
 import { BudgeInputs, ErrorRes, SuccessResponse } from "@/types/interfaces"
 
 

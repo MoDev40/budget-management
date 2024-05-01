@@ -12,7 +12,7 @@ import { ErrorRes } from "@/types/interfaces"
 import { IoReload } from "react-icons/io5"
 import { MdDelete } from "react-icons/md"
 import { toast } from "sonner"
-import { useDeleteCategoryMutation, useGetCategoryQuery } from "../../../strore/features/categorySlice"
+import { useDeleteCategoryMutation, useGetCategoryQuery } from "@/strore/features/categorySlice"
 import { Button } from "../ui/button"
 import UpadeteCategory from "./UpadeteCategory"
     

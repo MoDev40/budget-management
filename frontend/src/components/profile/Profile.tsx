@@ -3,17 +3,14 @@ import { Input } from "@/components/ui/input"
 import { useAuth } from "@/hooks/AuthUser"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { useCurentUserQuery } from "../../../strore/features/authSlice"
 import { z } from "zod"
-import { useEffect } from "react"
 import { Loader } from "lucide-react"
+import { useCurentUserQuery } from "@/strore/features/authSlice"
 
 const Profile = () => {
   const {user} = useAuth()
-  const {data,isLoading} = useCurentUserQuery({id:user?.uid as string})
-  useEffect(()=>{
+  const {data,isLoading} = useCurentUserQuery(user?.uid as string)
 
-  },[data?.user])
   const userSchema = z.object({
     username:z.string().min(2,{message:"Username must be at least 2 characters."}),
     email:z.string().email({message:"Enter Valid Email"}),

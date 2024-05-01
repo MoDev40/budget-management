@@ -5,7 +5,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Button } from "../ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
-import { useUpdateCategoryMutation} from "../../../strore/features/categorySlice"
+import { useUpdateCategoryMutation} from "@/strore/features/categorySlice"
 import { toast } from "sonner";
 import {FaEdit} from "react-icons/fa"
 import { IoReload } from "react-icons/io5";

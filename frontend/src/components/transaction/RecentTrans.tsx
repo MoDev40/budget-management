@@ -8,8 +8,8 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { useAuth } from "@/hooks/AuthUser"
+import { useRecentTransQuery } from "@/strore/features/transactionSlice"
 import { IoReload } from "react-icons/io5"
-import { useRecentTransQuery } from "../../../strore/features/transactionSlice"
 
 const RecentTrans = () => {
   const {user} = useAuth()
