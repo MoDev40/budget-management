@@ -13,7 +13,7 @@ import { useRecentTransQuery } from "../../../strore/features/transactionSlice"
 
 const RecentTrans = () => {
   const {user} = useAuth()
-  const {data,isLoading} = useRecentTransQuery({id:user?.uid as string})
+  const {data,isLoading} = useRecentTransQuery(user?.uid as string)
   return (
     <Table>
     <TableCaption>A list of your transaction.</TableCaption>

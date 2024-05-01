@@ -13,14 +13,8 @@ import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { ErrorRes } from "../budge/CreateBudge";
 import { useGetCategoryQuery } from "../../../strore/features/categorySlice"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { TransactionInputs } from "@/types/interfaces";
 
-export interface ReqBody {
-    amount:number,
-    categoryId:string
-    userId:string,
-    description:string | undefined,
-    payedAt:Date
-}
 const CreateTransaction = () => {
     const [createTranMutate,{isLoading}] = useCreateTransMutation()
     const {user} = useAuth()
@@ -41,7 +35,7 @@ const CreateTransaction = () => {
 
     const onSubmit : SubmitHandler<Inputs> = async (data)=>{
         const {payedAt,description,categoryId,userId,amount} = data
-        const transData : ReqBody = {
+        const transData : TransactionInputs = {
             amount:Number(amount),
             description,
             userId,

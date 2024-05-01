@@ -1,31 +1,30 @@
 import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+    Table,
+    TableBody,
+    TableCaption,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
 } from "@/components/ui/table"
 import { useAuth } from "@/hooks/AuthUser"
-import { useEffect } from "react"
-import { useGetUserTransQuery,useDeleteTransMutation, useCancelTransMutation} from "../../../strore/features/transactionSlice"
 import { IoReload } from "react-icons/io5"
-import { Button } from "../ui/button"
 import { MdCancel, MdDelete } from "react-icons/md"
-import { toast } from "sonner"
-import { ErrorRes } from "../budge/CreateBudge"
 import { Link } from "react-router-dom"
+import { toast } from "sonner"
+import { useCancelTransMutation, useDeleteTransMutation, useGetUserTransQuery } from "../../../strore/features/transactionSlice"
+import { Button } from "../ui/button"
+import { ErrorRes } from "@/types/interfaces"
   
     
 function TransactionTable() {
   const {user} = useAuth()
-  const {data,isLoading} = useGetUserTransQuery({id:user?.uid as string})
+  const {data,isLoading} = useGetUserTransQuery(user?.uid as string)
+
   const [deleteMutate,{isLoading:deleteLoad}] = useDeleteTransMutation()
   const [cancelMutate,{isLoading:canceLoad}] = useCancelTransMutation()
-  useEffect(()=>{
-  },[data])
 
+  
   const handleDelete : (id:string,userId:string)=> any = async(id:string,userId:string)=>{
       await deleteMutate({id,userId}).unwrap().then((data)=>{
           toast(data.message)

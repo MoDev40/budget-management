@@ -1,42 +1,36 @@
-import { useAuth } from "@/hooks/AuthUser"
+import { useAuth } from "@/hooks/AuthUser";
+import { ErrorRes, TransactionInputs } from "@/types/interfaces";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader } from "lucide-react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { IoReload } from "react-icons/io5";
+import { Params, useNavigate, useParams } from "react-router-dom";
+import { toast } from "sonner";
+import { z } from "zod";
+import { useGetCategoryQuery } from "../../../strore/features/categorySlice";
+import { useGetSingleTransQuery, useUpdateTransMutation } from "../../../strore/features/transactionSlice";
 import { Button } from "../ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
-import { useTranData } from "@/hooks/TransContext"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { SubmitHandler, useForm } from "react-hook-form"
-import { z } from "zod"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Textarea } from "../ui/textarea";
-import CategoryDropDown from "./CategoryDropDown";
-import { toast } from "sonner";
-import { useGetSingleTransQuery, useUpdateTransMutation } from "../../../strore/features/transactionSlice";
-import { IoReload } from "react-icons/io5";
-import { ErrorRes } from "../budge/CreateBudge";
-import { Params, useNavigate, useParams } from "react-router-dom";
-import { useEffect} from "react";
-import { Loader } from "lucide-react";
 
-export interface ReqBody {
-    amount:number,
-    categoryId:string
-    userId:string,
-    description:string | undefined,
-    payedAt:Date
-}
+
 
 const UpdateTransaction = () => {
+    const {user} = useAuth()
     const navigate = useNavigate()
     const params = useParams<Params>()
-    const {data:trans,setData} = useTranData()
     const [updateTranMutate,{isLoading}] = useUpdateTransMutation()
-    const {data:transaction,isLoading:isFetching} = useGetSingleTransQuery({id:params.id as string})
-    useEffect(()=>{
-    },[transaction?.transaction])
-    const {user} = useAuth()
+    const {data:categories} = useGetCategoryQuery({id:user?.uid as string})
+    const {data:transaction,isLoading:isFetching} = useGetSingleTransQuery(params.id as string)
+
     const transSchema = z.object({
         amount:z.string(),
         userId:z.string(),
         description:z.string().optional(),
+        categoryId:z.string(),
+        payedAt:z.string(),
     })
 
     type Inputs = z.infer<typeof transSchema>
@@ -45,14 +39,16 @@ const UpdateTransaction = () => {
     }})
 
     const onSubmit : SubmitHandler<Inputs> = async (data)=>{
-        if(trans?.categoryId == ""){
-            return toast("Category ID")
-        }
-        const {userId,amount,description} = data
-        const updatedTrans : ReqBody = {userId,amount:Number(amount),description,payedAt:new Date(trans?.payetAt as Date),categoryId:trans?.categoryId as string}
+        const {userId,amount,description,payedAt,categoryId} = data
+        const updatedTrans : TransactionInputs = {
+            amount:Number(amount),
+            description,
+            userId,
+            categoryId,
+            payedAt: new Date(payedAt),
+        } 
         await updateTranMutate({data:updatedTrans,id:transaction?.transaction?.id as string}).unwrap().then((data)=>{
             toast(data.message)
-            setData(null)
             navigate("/dashboard/history")
         }).catch((error:ErrorRes)=>{
             toast(error.data.message)
@@ -110,7 +106,44 @@ const UpdateTransaction = () => {
             </FormItem>
             )}
             />
-            <CategoryDropDown defaultVal={transaction?.transaction?.categoryId as string}/>
+                        <FormField
+            control={form.control}
+            name="payedAt"
+            defaultValue={transaction?.transaction.payedAt.toString()}
+            render={({field})=>(
+            <FormItem>
+                <FormLabel>payedAt</FormLabel>
+                <FormControl>
+                    <Input type="date" {...field}/>
+                </FormControl>
+                <FormMessage className="p-0 text-right"/>
+            </FormItem>
+            )}
+            />
+            <FormField
+            control={form.control}
+            name="categoryId"
+            defaultValue={transaction?.transaction.categoryId}
+            render={({field})=>(
+                <FormItem>
+                    <FormControl>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Pick category"/>
+                        </SelectTrigger>
+                        <SelectContent>
+                            {   
+                                categories&&
+                                categories.categories.map((category)=>(
+                                    <SelectItem key={category.id} value={category.id}>{category.name}</SelectItem>
+                                ))
+                            }
+                        </SelectContent>
+                    </Select>
+                    </FormControl>
+                </FormItem>
+            )}
+            />
             <Button type="submit">{ isLoading ?<IoReload size={20} className="animate-spin"/> :"Submit"}</Button>
             </form>
         </Form>

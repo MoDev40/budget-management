@@ -1,70 +1,34 @@
-import {createApi,fetchBaseQuery} from "@reduxjs/toolkit/query/react"
+import { DeleteCancel, SingleTransaction, TransactionInputs, Transactions, UpdateTransaction } from "@/types/interfaces"
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 import { BASE_URL } from "../baseUrl"
 import { ResponseData } from "./categorySlice"
 
-export interface ReqBody {
-    amount:number,
-    categoryId:string
-    userId:string,
-    description:string | undefined,
-    payedAt:Date
-}
 
-type Params = {
-    id:string | undefined,
-}
-
-
-interface UpdateParams extends Params {
-    data:ReqBody
-}
-
-
-export interface Transaction {
-    
-    id: string;
-    amount: number;
-    description: string | null;
-    createdAt: Date;
-    payedAt: Date;
-    categoryId: string;
-}
-
-export type Trans = {
-    transaction:Transaction
-}
-
-interface Transactions {
-    transactions:Transaction[]
-}
-interface DeleteCancelParams extends Params {
-    userId:string
-}
 export const transactionSlice = createApi({
     
     reducerPath:"transApi",
     baseQuery:fetchBaseQuery({baseUrl:BASE_URL}),
     tagTypes:["trans"],
     endpoints:(builder)=>({
-        getUserTrans:builder.query<Transactions,Params>({
-            query:({id})=>({
+        getUserTrans:builder.query<Transactions,string>({
+            query:(id)=>({
                 url:`get-transactions/${id}`
             }),
             providesTags:["trans"]
         }),
-        recentTrans:builder.query<Transactions,Params>({
-            query:({id})=>({
+        recentTrans:builder.query<Transactions,string>({
+            query:(id)=>({
                 url:`recent-transactions/${id}`
             }),
             providesTags:["trans"]
         }),
-        getSingleTrans:builder.query<Trans,Params>({
-            query:({id})=>({
+        getSingleTrans:builder.query<SingleTransaction,string>({
+            query:(id)=>({
                 url:`single-transaction/${id}`
             }),
             providesTags:["trans"]
         }),
-        createTrans:builder.mutation<ResponseData,ReqBody>({
+        createTrans:builder.mutation<ResponseData,TransactionInputs>({
             query:(data)=>({
                 url:"create-transaction",
                 method:"POST",
@@ -72,7 +36,7 @@ export const transactionSlice = createApi({
             }),
             invalidatesTags:["trans"]
         }),
-        updateTrans:builder.mutation<ResponseData,UpdateParams>({
+        updateTrans:builder.mutation<ResponseData,UpdateTransaction>({
             query:({id,data})=>({
                 url:`update-transaction/${id}`,
                 method:"PUT",
@@ -80,14 +44,14 @@ export const transactionSlice = createApi({
             }),
             invalidatesTags:["trans"],
         }),
-        cancelTrans:builder.mutation<ResponseData,DeleteCancelParams>({
+        cancelTrans:builder.mutation<ResponseData,DeleteCancel>({
             query:({id,userId})=>({
                 url:`cancel-transaction/${id}/${userId}`,
                 method:"DELETE",
             }),
             invalidatesTags:["trans"]
         }),
-        deleteTrans:builder.mutation<ResponseData,DeleteCancelParams>({
+        deleteTrans:builder.mutation<ResponseData,DeleteCancel>({
             query:({id,userId})=>({
                 url:`delete-transaction/${id}/${userId}`,
                 method:"DELETE",

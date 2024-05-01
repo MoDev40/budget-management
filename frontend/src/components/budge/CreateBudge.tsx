@@ -9,6 +9,7 @@ import { IoReload } from "react-icons/io5"
 import { toast } from "sonner"
 import { useAuth } from "@/hooks/AuthUser"
 import { useCreateBudgetMutation } from "../../../strore/features/budgetSlice"
+import { ErrorRes } from "@/types/interfaces"
 
 export interface ReqBody {
     userId:string;
@@ -16,11 +17,7 @@ export interface ReqBody {
     startDate:Date;
 }
 
-export type ErrorRes = {
-    data:{
-        message:string
-    }
-}
+
 export type SuccRes = {
     message:string
 }
