@@ -8,37 +8,16 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { useAuth } from "@/hooks/AuthUser"
+import { useGetUserTransQuery } from "@/strore/features/transactionSlice"
 import { IoReload } from "react-icons/io5"
-import { MdCancel, MdDelete } from "react-icons/md"
 import { Link } from "react-router-dom"
-import { toast } from "sonner"
-import { useCancelTransMutation, useDeleteTransMutation, useGetUserTransQuery } from "@/strore/features/transactionSlice"
-import { Button } from "../ui/button"
-import { ErrorRes } from "@/types/globalInterface"
+import DeleteTransaction from "./DeleteTransaction"
+import CancelTransaction from "./CancelTransaction"
   
     
 function TransactionTable() {
   const {user} = useAuth()
   const {data,isLoading} = useGetUserTransQuery(user?.uid as string)
-
-  const [deleteMutate,{isLoading:deleteLoad}] = useDeleteTransMutation()
-  const [cancelMutate,{isLoading:canceLoad}] = useCancelTransMutation()
-
-  
-  const handleDelete : (id:string,userId:string)=> any = async(id:string,userId:string)=>{
-      await deleteMutate({id,userId}).unwrap().then((data)=>{
-          toast(data.message)
-      }).catch((error:ErrorRes)=>{
-          toast(error.data.message)
-      })
-  } 
-  const handleCancel : (id:string,userId:string)=> any = async(id:string,userId:string)=>{
-      await cancelMutate({id,userId}).unwrap().then((data)=>{
-          toast(data.message)
-      }).catch((error:ErrorRes)=>{
-          toast(error.data.message)
-      })
-  } 
 return (
   <Table>
   <TableCaption>A list of your transaction.</TableCaption>
@@ -59,8 +38,8 @@ return (
           <TableCell>{transaction.amount ? transaction.amount  : "0.00"}</TableCell>
           <TableCell><Link className="underline" to={`/dashboard/transaction/${transaction.id}`}>Update</Link></TableCell>
           <TableCell>
-            <Button className="md:rounded-r-none" onClick={()=>handleCancel(transaction.id,user?.uid as string)} variant="destructive">{canceLoad ?<IoReload size={15} className="animate-spin"/>:<MdCancel/>}</Button>
-            <Button className="md:rounded-l-none" onClick={()=>handleDelete(transaction.id,user?.uid as string)} variant="destructive">{deleteLoad ?<IoReload size={15} className="animate-spin"/>:<MdDelete/>}</Button>
+            <CancelTransaction id={transaction.id} userId={user?.uid as string}/>
+            <DeleteTransaction id={transaction.id} userId={user?.uid as string}/>
           </TableCell>
       </TableRow>
       ))}
