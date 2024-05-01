@@ -1,26 +1,20 @@
-import { SubmitHandler, useForm } from "react-hook-form"
-import { Button } from "../ui/button"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
-import {z} from "zod"
-import { Input } from "../ui/input"
+import { useAuth } from "@/hooks/AuthUser"
+import { ErrorRes, SuccessResponse, UpdateBudgeInputs } from "@/types/interfaces"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { SubmitHandler, useForm } from "react-hook-form"
 import { IoReload } from "react-icons/io5"
 import { toast } from "sonner"
-import { useAuth } from "@/hooks/AuthUser"
-import { useUpdateBudgetMutation, useGetUserBudgetQuery } from "../../../strore/features/budgetSlice"
-import { ErrorRes, SuccRes } from "./CreateBudge"
-
-export interface ReqBody {
-    userId:string;
-    amount:number;
-}
-
+import { z } from "zod"
+import { useGetUserBudgetQuery, useUpdateBudgetMutation } from "../../../strore/features/budgetSlice"
+import { Button } from "../ui/button"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
+import { Input } from "../ui/input"
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 
 
 const UpdateBudge = () => {
     const {user} = useAuth()
-    const {data:budget}= useGetUserBudgetQuery({id:user?.uid as string})
+    const {data:budget}= useGetUserBudgetQuery(user?.uid as string)
     const [UpdateBudget,{isLoading}] = useUpdateBudgetMutation()
     const budgeSchema = z.object({
         userId:z.string(),
@@ -35,8 +29,8 @@ const UpdateBudge = () => {
 
     const onSubmit : SubmitHandler<Inputs> = async(data)=>{
         const {amount,userId} =  data
-        const reqBody : ReqBody = {amount:Number(amount),userId}
-        await UpdateBudget({data:reqBody,id:budget?.isBudgetExists?.id as string}).unwrap().then((data:SuccRes)=>{
+        const updatedBudge : UpdateBudgeInputs = {amount:Number(amount),userId}
+        await UpdateBudget({data:updatedBudge,id:budget?.isBudgetExists?.id as string}).unwrap().then((data:SuccessResponse)=>{
             toast(data.message)
             form.reset()
         }).catch((error:ErrorRes)=>{

@@ -1,49 +1,21 @@
-import {createApi,fetchBaseQuery} from "@reduxjs/toolkit/query/react"
+import { BudgeInputs, BudgeResponse, UpdateBudge } from "@/types/interfaces"
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 import { BASE_URL } from "../baseUrl"
-import { ReqBody as CreateParams} from "@/components/budge/CreateBudge"
-import { ReqBody as DataShape} from "@/components/budge/UpdateBudge"
 import { ResponseData } from "./categorySlice"
 
-type Params = {
-    id:string,
-}
-
-
-interface UpdateParams extends Params {
-    data:DataShape
-}
-
-interface ResData {
-    message:string;
-    isBudgetExists:{
-        balance:{
-                id: string;
-                amount: number;
-                userId: string;
-                fromDate: Date;
-                toDate: Date;
-                budgetId: string;
-        }[]}&{
-            id: string;
-            amount: number;
-            startDate: Date;
-            endDate: Date;
-            userId: string;
-    }
-  }
 
 export const budgetSlice = createApi({
     reducerPath:"budgetApi",
     baseQuery:fetchBaseQuery({baseUrl:BASE_URL}),
     tagTypes:["budget"],
     endpoints:(builder)=>({
-        getUserBudget:builder.query<ResData,Params>({
-            query:({id})=>({
+        getUserBudget:builder.query<BudgeResponse,string>({
+            query:(id)=>({
                 url:`user-budget/${id}`
             }),
             providesTags:["budget"]
         }),
-        createBudget:builder.mutation<ResponseData,CreateParams>({
+        createBudget:builder.mutation<ResponseData,BudgeInputs>({
             query:(data)=>({
                 url:"create-budget",
                 method:"POST",
@@ -51,7 +23,7 @@ export const budgetSlice = createApi({
             }),
             invalidatesTags:["budget"]
         }),
-        updateBudget:builder.mutation<ResponseData,UpdateParams>({
+        updateBudget:builder.mutation<ResponseData,UpdateBudge>({
             query:({id,data})=>({
                 url:`update-budget/${id}`,
                 method:"PUT",

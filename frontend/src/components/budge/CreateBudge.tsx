@@ -9,18 +9,7 @@ import { IoReload } from "react-icons/io5"
 import { toast } from "sonner"
 import { useAuth } from "@/hooks/AuthUser"
 import { useCreateBudgetMutation } from "../../../strore/features/budgetSlice"
-import { ErrorRes } from "@/types/interfaces"
-
-export interface ReqBody {
-    userId:string;
-    amount:number;
-    startDate:Date;
-}
-
-
-export type SuccRes = {
-    message:string
-}
+import { BudgeInputs, ErrorRes, SuccessResponse } from "@/types/interfaces"
 
 
 const CreateBudge = () => {
@@ -38,8 +27,8 @@ const CreateBudge = () => {
 
     const onSubmit : SubmitHandler<Inputs> = async(data)=>{
         const {amount,userId} =  data
-        const reqBody : ReqBody = {amount:Number(amount),userId,startDate:new Date()}
-        await createBudge(reqBody).unwrap().then((data:SuccRes)=>{
+        const reqBody : BudgeInputs = {amount:Number(amount),userId,startDate:new Date()}
+        await createBudge(reqBody).unwrap().then((data:SuccessResponse)=>{
             toast(data.message)
             form.reset()
         }).catch((error:ErrorRes)=>{

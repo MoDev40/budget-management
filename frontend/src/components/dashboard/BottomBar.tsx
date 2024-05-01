@@ -1,19 +1,16 @@
-import { LucideBadgeDollarSign, Wallet } from "lucide-react"
-import { Button } from "../ui/button"
-import CreateBudge from "../budge/CreateBudge"
-import { useGetUserBudgetQuery } from "../../../strore/features/budgetSlice"
 import { useAuth } from "@/hooks/AuthUser"
-import { useEffect } from "react"
+import { LucideBadgeDollarSign, Wallet } from "lucide-react"
+import { useGetUserBudgetQuery } from "../../../strore/features/budgetSlice"
+import CreateBudge from "../budge/CreateBudge"
 import UpdateBudge from "../budge/UpdateBudge"
 import CreateTransaction from "../transaction/CreateTransaction"
 import RecentTrans from "../transaction/RecentTrans"
+import { Button } from "../ui/button"
 
 const BottomBar = () => {
   const {user} = useAuth()
-  const {data:budget,isFetching}= useGetUserBudgetQuery({id:user?.uid as string})
-  useEffect(()=>{
-    console.log(budget)
-  },[budget])
+  const {data:budget,isFetching}= useGetUserBudgetQuery(user?.uid as string)
+  
   return (
     <div className="w-full md:px-4 mt-5 space-y-10 px-10">
       <div className="flex flex-row  md:px-2 items-center justify-between">

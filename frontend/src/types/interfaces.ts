@@ -1,3 +1,20 @@
+// Global interfaces
+export type Params = {
+    id:string | undefined,
+}
+
+export type ErrorRes = {
+    data:{
+        message:string
+    }
+}
+
+export type SuccessResponse = {
+    message:string
+}
+
+// Transaction interfaces
+
 // create transaction input types
 export interface TransactionInputs {
     amount:number,
@@ -7,9 +24,7 @@ export interface TransactionInputs {
     payedAt:Date
 }
 
-export type Params = {
-    id:string | undefined,
-}
+
 
 // update transaction inputs
 export interface UpdateTransaction extends Params {
@@ -38,8 +53,39 @@ export interface Transactions {
     transactions:Transaction[]
 }
 
-export type ErrorRes = {
-    data:{
-        message:string
-    }
+
+
+// Budge Interfaces
+
+// budge inputs
+export interface UpdateBudgeInputs {
+    userId:string;
+    amount:number;
 }
+export interface BudgeInputs extends UpdateBudgeInputs {
+    startDate:Date;
+}
+
+// in budgeSlice
+export interface UpdateBudge extends Params {
+    data:UpdateBudgeInputs
+}
+
+export interface BudgeResponse {
+    message:string;
+    isBudgetExists:{
+        balance:{
+                id: string;
+                amount: number;
+                userId: string;
+                fromDate: Date;
+                toDate: Date;
+                budgetId: string;
+        }[]}&{
+            id: string;
+            amount: number;
+            startDate: Date;
+            endDate: Date;
+            userId: string;
+    }
+  }
