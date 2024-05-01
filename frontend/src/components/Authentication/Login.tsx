@@ -32,7 +32,7 @@ const Login = () => {
     email:z.string().email({message:"Enter Valid Email"}),
     password:z.string()
     .min(6,{message:"Minimum Password is 6"})
-    .max(12,{message:"Miximum Password is 12"})
+    .max(12,{message:"Maximum Password is 12"})
   })
 
   type Inputs = z.infer<typeof userSchema>

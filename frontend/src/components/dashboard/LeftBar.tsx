@@ -4,14 +4,14 @@ import { GrDocumentConfig } from "react-icons/gr";
 import { Link } from "react-router-dom";
 import { Label } from "../ui/label";
 import { Props } from "./TopBar";
-const LeftBar : React.FC<Props>= ({togle,setTogle}) => {
+const LeftBar : React.FC<Props>= ({toggle: toggle,setToggle: setToggle}) => {
     function handleClose () : void {
-      if(togle){
-        setTogle(!togle)
+      if(toggle){
+        setToggle(!toggle)
       }
     }
   return (
-    <div className={togle ? "h-screen block p-5  bg-black" : "md:block hidden p-5  h-screen   bg-black"}>
+    <div className={toggle ? "h-screen block p-5  bg-black" : "md:block hidden p-5  h-screen   bg-black"}>
       <ul className="text-white space-y-8 p-4">
         <li>
           <Link className="flex flex-row items-center space-x-3" onClick={handleClose} to={"/"}>

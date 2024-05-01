@@ -24,8 +24,9 @@ const Profile = () => {
 
   return (
     isLoading ?
-    <Loader className="animate-spin"/>
-    :
+    
+    <Loader className="animate-spin"/> :
+
     <div className="flex flex-col md:w-[1120px] md:mx-auto md:p-10">
         <div className="bg-[#212023] shadow-md w-full rounded-tr rounded-tl py-2 h-2">
         </div>
