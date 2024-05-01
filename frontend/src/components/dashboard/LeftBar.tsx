@@ -1,20 +1,15 @@
-import { useEffect } from "react"
-import { Props } from "./TopBar"
+import { Settings } from "lucide-react";
+import { FaHouse, FaMoneyBillTransfer, FaMoneyBills } from "react-icons/fa6";
+import { GrDocumentConfig } from "react-icons/gr";
 import { Link } from "react-router-dom";
 import { Label } from "../ui/label";
-import { FaHouse, FaMoneyBillTransfer, FaMoneyBills} from "react-icons/fa6";
-import { Settings } from "lucide-react";
-import {GrDocumentConfig} from "react-icons/gr"
+import { Props } from "./TopBar";
 const LeftBar : React.FC<Props>= ({togle,setTogle}) => {
-  useEffect(()=>{
-    console.log(togle);
-  },[togle])
-
-  const handleClose : ()=> void = ()=>{
-    if(togle){
-      setTogle(!togle)
+    function handleClose () : void {
+      if(togle){
+        setTogle(!togle)
+      }
     }
-  }
   return (
     <div className={togle ? "h-screen block p-5  bg-black" : "md:block hidden p-5  h-screen   bg-black"}>
       <ul className="text-white space-y-8 p-4">

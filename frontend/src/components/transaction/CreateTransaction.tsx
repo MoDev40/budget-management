@@ -2,18 +2,17 @@ import { useAuth } from "@/hooks/AuthUser"
 import { Button } from "../ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
-import { useTranData } from "@/hooks/TransContext"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { z } from "zod"
 import { Textarea } from "../ui/textarea";
-import CategoryDropDown from "./CategoryDropDown";
-import { DatePicker } from "../DatePicker";
 import { toast } from "sonner";
 import { useCreateTransMutation } from "../../../strore/features/transactionSlice";
 import { IoReload } from "react-icons/io5";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { ErrorRes } from "../budge/CreateBudge";
+import { useGetCategoryQuery } from "../../../strore/features/categorySlice"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 export interface ReqBody {
     amount:number,
@@ -22,31 +21,35 @@ export interface ReqBody {
     description:string | undefined,
     payedAt:Date
 }
-
 const CreateTransaction = () => {
     const [createTranMutate,{isLoading}] = useCreateTransMutation()
-    const {data:trans,setData} = useTranData()
     const {user} = useAuth()
+    const {data:categories} = useGetCategoryQuery({id:user?.uid as string})
+
     const transSchema = z.object({
         amount:z.string(),
         userId:z.string(),
+        categoryId:z.string(),
+        payedAt:z.string(),
         description:z.string().optional(),
     })
 
     type Inputs = z.infer<typeof transSchema>
     const form = useForm<Inputs>({resolver:zodResolver(transSchema),defaultValues:{
-        userId:user?.uid
+        userId:user?.uid || "hidQODq"
     }})
 
     const onSubmit : SubmitHandler<Inputs> = async (data)=>{
-        if(trans?.categoryId == ""){
-            return toast("Category ID")
-        }
-        const {userId,amount,description} = data
-        const createdTrans : ReqBody = {userId,amount:Number(amount),description,payedAt:new Date(trans?.payetAt as Date),categoryId:trans?.categoryId as string}
-        await createTranMutate(createdTrans).unwrap().then((data)=>{
+        const {payedAt,description,categoryId,userId,amount} = data
+        const transData : ReqBody = {
+            amount:Number(amount),
+            description,
+            userId,
+            categoryId,
+            payedAt: new Date(payedAt),
+        } 
+        await createTranMutate(transData).unwrap().then((data)=>{
             toast(data.message)
-            setData(null)
         }).catch((error:ErrorRes)=>{
             toast(error.data.message)
         })
@@ -64,7 +67,7 @@ const CreateTransaction = () => {
             <FormItem>
                 <FormLabel>id</FormLabel>
                 <FormControl>
-                    <Input type="text" {...field} readOnly/>
+                    <Input type="text" {...field} readOnly />
                 </FormControl>
                 <FormMessage className="p-0 text-right"/>
             </FormItem>
@@ -101,8 +104,43 @@ const CreateTransaction = () => {
             </FormItem>
             )}
             />
-            <CategoryDropDown defaultVal=""/>
-            <DatePicker/>
+            <FormField
+            control={form.control}
+            name="payedAt"
+            defaultValue=""
+            render={({field})=>(
+            <FormItem>
+                <FormLabel>payedAt</FormLabel>
+                <FormControl>
+                    <Input type="date" {...field}/>
+                </FormControl>
+                <FormMessage className="p-0 text-right"/>
+            </FormItem>
+            )}
+            />
+            <FormField
+            control={form.control}
+            name="categoryId"
+            render={({field})=>(
+                <FormItem>
+                    <FormControl>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Pick category"/>
+                        </SelectTrigger>
+                        <SelectContent>
+                            {   
+                                categories&&
+                                categories.categories.map((category)=>(
+                                    <SelectItem key={category.id} value={category.id}>{category.name}</SelectItem>
+                                ))
+                            }
+                        </SelectContent>
+                    </Select>
+                    </FormControl>
+                </FormItem>
+            )}
+            />
             <Button type="submit">{ isLoading ?<IoReload size={20} className="animate-spin"/> :"Submit"}</Button>
             </form>
         </Form>

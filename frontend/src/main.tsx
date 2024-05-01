@@ -1,6 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
 import { Toaster } from "@/components/ui/sonner"
 import './index.css'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
@@ -10,7 +9,6 @@ import DashboardPage from './pages/dashboard/DashboardPage.tsx'
 import ProfilePage from './pages/dashboard/ProfilePage.tsx'
 import HomePage from './pages/HomePage.tsx'
 import LandingPage from './pages/dashboard/LandingPage.tsx'
-import { TransDataProvider } from './hooks/TransContext.tsx'
 import { AuthProvider } from './hooks/AuthUser.tsx'
 import {store} from "../strore/store.ts"
 import { Provider } from 'react-redux'
@@ -62,11 +60,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <Provider store={store}>
     <AuthProvider>
-    <TransDataProvider>
     <RouterProvider router={router}/>
     <Toaster/>
-    <App />
-    </TransDataProvider>
     </AuthProvider>
     </Provider>
   </React.StrictMode>,
