@@ -25,10 +25,7 @@ export interface TransactionInputs {
 export interface UpdateTransaction extends Params {
     data:TransactionInputs
 }
-// cancel transaction inputs
-export interface DeleteCancel extends Params {
-    userId:string
-}
+
 // single transaction type
 export interface Transaction {
     id: string;

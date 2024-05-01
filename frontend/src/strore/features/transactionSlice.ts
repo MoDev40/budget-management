@@ -1,7 +1,7 @@
-import { DeleteCancel, SingleTransaction, TransactionInputs, Transactions, UpdateTransaction } from "@/types/transactionInterface"
+import { SingleTransaction, TransactionInputs, Transactions, UpdateTransaction } from "@/types/transactionInterface"
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 import { BASE_URL } from "../baseUrl"
-import { SuccessResponse } from "@/types/globalInterface"
+import { DeleteCancel, SuccessResponse } from "@/types/globalInterface"
 
 
 export const transactionSlice = createApi({

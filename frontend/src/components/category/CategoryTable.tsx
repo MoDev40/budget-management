@@ -8,7 +8,7 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { useAuth } from "@/hooks/AuthUser"
-import { ErrorRes } from "@/types/interfaces"
+import { ErrorRes } from "@/types/globalInterface"
 import { IoReload } from "react-icons/io5"
 import { MdDelete } from "react-icons/md"
 import { toast } from "sonner"

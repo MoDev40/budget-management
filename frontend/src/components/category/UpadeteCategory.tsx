@@ -1,15 +1,15 @@
+import { useUpdateCategoryMutation } from "@/strore/features/categorySlice";
+import { Category, CategoryInputs, categorySchema } from "@/types/categoryInterface";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SubmitHandler, useForm } from "react-hook-form"
-import { z } from "zod";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { FaEdit } from "react-icons/fa";
+import { IoReload } from "react-icons/io5";
+import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
-import { useUpdateCategoryMutation} from "@/strore/features/categorySlice"
-import { toast } from "sonner";
-import {FaEdit} from "react-icons/fa"
-import { IoReload } from "react-icons/io5";
-import { Category, ErrorRes } from "@/types/interfaces";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { ErrorRes } from "@/types/globalInterface";
 
 interface Props {
     category:Category
@@ -17,18 +17,13 @@ interface Props {
 
 const UpadeteCategory : React.FC<Props> = ({category}) => {
     const [updateMutate,{isLoading}] =  useUpdateCategoryMutation()
-    const categSchema = z.object({
-        name:z.string(),
-        userId:z.string().readonly(),
-    })
-    type Inputs = z.infer<typeof categSchema>
 
-    const form = useForm<Inputs>({resolver:zodResolver(categSchema),defaultValues:{
+    const form = useForm<CategoryInputs>({resolver:zodResolver(categorySchema),defaultValues:{
         userId:category.userId,
         name:category.name,
     }})
 
-    const onSubmit : SubmitHandler<Inputs> = async(data)=>{
+    const onSubmit : SubmitHandler<CategoryInputs> = async(data)=>{
         await updateMutate({id:category.id,data}).unwrap().then((data)=>{
             toast(data.message)
         }).catch((error:ErrorRes)=>{

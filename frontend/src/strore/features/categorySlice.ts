@@ -1,6 +1,7 @@
 import {createApi,fetchBaseQuery} from "@reduxjs/toolkit/query/react"
 import {BASE_URL} from "../baseUrl"
-import { Categories, CategoryInputs, DeleteCategory, SuccessResponse, UpdateCategory } from "@/types/interfaces"
+import { Categories, CategoryInputs,UpdateCategory } from "@/types/categoryInterface"
+import { DeleteCancel, SuccessResponse } from "@/types/globalInterface"
 
 
 
@@ -25,7 +26,7 @@ const categorySlice = createApi({
             }),
             invalidatesTags:["category"]
         }),
-        deleteCategory:builder.mutation<SuccessResponse,DeleteCategory>({
+        deleteCategory:builder.mutation<SuccessResponse,DeleteCancel>({
             query:({id,userId})=>({
                 url:`delete-category/${id}/${userId}`,
                 method:"DELETE"
