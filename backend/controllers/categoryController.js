@@ -18,7 +18,7 @@ export async function createCategory(req,res){
         }
         res.status(201).json({message:"Created Successfully"})
     } catch (error) {
-        res.status(500).json({message:error.mesaage,error})
+        res.status(500).json({message:error.message,error})
     }
 }
 
@@ -54,7 +54,7 @@ export async function updateCategory(req,res){
         }
         res.status(200).json({message:"Updated Successfully"})
     } catch (error) {
-        res.status(500).json({message:error.mesaage,error})
+        res.status(500).json({message:error.message,error})
     }
 }
 

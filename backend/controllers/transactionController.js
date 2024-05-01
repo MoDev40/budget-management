@@ -1,6 +1,6 @@
 import {prisma} from "../config/config.js"
 import {randomId} from "../config/getId.js"
-import { decreaceBalance, increaceBalance } from "./balanceController.js"
+import { decreaseBalance, increaseBalance } from "./balanceController.js"
 
 export async function createTransaction(req,res){
     try {
@@ -8,13 +8,8 @@ export async function createTransaction(req,res){
 
         const currentDate = new Date();
 
-        const payed = new Date(payedAt);
-
         const getYear = currentDate.getFullYear();
         const getMonth = currentDate.getMonth();
-
-        const getPayedYear = payed.getFullYear();
-        const getPayedMonth = payed.getMonth();
 
         const transId = await randomId()
 
@@ -26,7 +21,7 @@ export async function createTransaction(req,res){
         })
 
         if(!existBalance){
-            res.status(404).json({message:"Error blance not initialized this month"})
+            res.status(404).json({message:"Error balance not initialized this month"})
             return
         }
         const isCategoryExists = await prisma.category.findUnique({
@@ -41,25 +36,7 @@ export async function createTransaction(req,res){
             return
         }
 
-
-        const isTransExists = await prisma.transaction.findFirst({
-            where:{
-                AND:[{categoryId},{userId},{createdAt:{
-                    gt: new Date(getYear, getMonth,1),
-                    lt: new Date(getYear, getMonth+1,1)
-                }},
-                { payedAt:{
-                    gt: new Date(getPayedYear, getPayedMonth,1),
-                    lt: new Date(getPayedYear, getPayedMonth+1,1)
-                }
-            }]
-            }
-        })
         
-        if(isTransExists){
-            res.status(400).json({message:"Transaction is exists"})
-            return
-        }
         const createdTrans = await prisma.transaction.create({
             data:{
                 id:transId,
@@ -87,8 +64,8 @@ export async function createTransaction(req,res){
             return
         }
 
-        const decreacedBalance = await decreaceBalance(userId,updatedAmount,existBalance.id)
-        if(!decreacedBalance){
+        const decreasedBalance = await decreaseBalance(userId,amount,existBalance.id)
+        if(!decreasedBalance){
             await prisma.transaction.delete({
                 where:{
                     id:createdTrans.id
@@ -99,7 +76,7 @@ export async function createTransaction(req,res){
         }
         res.status(201).json({message:"Created successfully"})
     } catch (error) {
-        res.status(500).json({mesaage:error.mesaage,error})
+        res.status(500).json({message:error.message,error})
     }
 }
 
@@ -138,11 +115,10 @@ export async function cancelTransaction(req,res){
         }
 
         const amount = isTransExists.amount
-        const updatedAmount = amount + balance.amount
 
-        const increacedBalance = await increaceBalance(userId,updatedAmount,balance.id)
+        const increasedBalance = await increaseBalance(userId,amount,balance.id)
 
-        if(!increacedBalance){
+        if(!increasedBalance){
             res.status(400).json({message:"Error increase balance try again"})
             return
         }
@@ -154,13 +130,14 @@ export async function cancelTransaction(req,res){
         })
 
         if(!canceled){
+            await decreaseBalance(userId,amount,balance.id)
             res.status(400).json({message:"Error cancel transaction try again"})
             return
         }
 
         res.status(200).json({message:"Transaction canceled"})
     } catch (error) {
-        res.status(500).json({mesaage:error.mesaage,error})
+        res.status(500).json({message:error.message,error})
     }
 }
 
@@ -204,24 +181,23 @@ export async function updateTransition(req,res){
 
         if(amount > isTransExists.amount){
             const clearAmount = amount - isTransExists.amount
-            const updatedAmount = balanceAmount - clearAmount;
+            const isBalanceNegative = balanceAmount - clearAmount;
 
-            if(updatedAmount < 0){
+            if(isBalanceNegative < 0){
                 res.status(400).json({message:"Error updating transaction try again"})
                 return
             }
 
-            const decreacedBalance = await decreaceBalance(userId,updatedAmount,balance.id)
-            if(!decreacedBalance){
+            const decreasedBalance = await decreaseBalance(userId,clearAmount,balance.id)
+            if(!decreasedBalance){
                 res.status(400).json({message:"Error updating transaction try again"})
                 return
             }
 
         }else if(amount < isTransExists.amount){
             const clearAmount = isTransExists.amount - amount
-            const updatedAmount = balanceAmount + clearAmount;
-            const increacedBalance = await increaceBalance(userId,updatedAmount,balance.id)
-            if(!increacedBalance){
+            const increasedBalance = await increaseBalance(userId,clearAmount,balance.id)
+            if(!increasedBalance){
                 res.status(400).json({message:"Error updating transaction try again"})
                 return
             }
@@ -253,9 +229,9 @@ export async function updateTransition(req,res){
             return
         }
 
-        res.status(200).json({message:"Successefully updated"})
+        res.status(200).json({message:"Successfully updated"})
     } catch (error) {
-        res.status(500).json({mesaage:error.mesaage,error})
+        res.status(500).json({message:error.message,error})
     }
 }
 
@@ -272,9 +248,9 @@ export async function deleteTransaction(req,res){
             res.status(400).json({message:"Error try again"})
             return
         }
-        res.status(200).json({message:"Successefully deleted"})
+        res.status(200).json({message:"Successfully deleted"})
     } catch (error) {
-        res.status(500).json({mesaage:error.mesaage,error})       
+        res.status(500).json({message:error.message,error})       
     }
 }
 
@@ -302,7 +278,7 @@ export async function getUserTrans(req,res){
         }
         res.status(200).json({message:"Found successfully",transactions:isTransExists})
     } catch (error) {
-        res.status(500).json({mesaage:error.mesaage,error})       
+        res.status(500).json({message:error.message,error})       
     }
 }
 
@@ -330,12 +306,12 @@ export async function singleTrans(req,res){
         }
         res.status(200).json({message:"Found successfully",transaction:isTransExists})
     } catch (error) {
-        res.status(500).json({mesaage:error.mesaage,error})       
+        res.status(500).json({message:error.message,error})       
     }
 }
 
 
-export async function recentTrns(req,res){
+export async function recentTrans(req,res){
     try {
         const {id} = req.params
         const date = new Date()
@@ -361,6 +337,6 @@ export async function recentTrns(req,res){
         }
         res.status(200).json({message:"Found successfully",transactions:isTransExists})
     } catch (error) {
-        res.status(500).json({mesaage:error.mesaage,error})       
+        res.status(500).json({message:error.message,error})       
     }
 } 

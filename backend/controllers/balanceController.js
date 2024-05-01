@@ -1,11 +1,13 @@
 import { prisma } from "../config/config.js"
 
-export async function decreaceBalance (userId,updatedAmount,balanceId){
+export async function decreaseBalance (userId,amount,balanceId){
     try {
 
         return await prisma.balance.update({
             data:{
-                amount:updatedAmount
+                amount:{
+                    decrement:amount,
+                }
             },
             where:{
                 id:balanceId,
@@ -17,18 +19,20 @@ export async function decreaceBalance (userId,updatedAmount,balanceId){
     }
 }
 
-export async function increaceBalance (userId,updatedAmount,balanceId){
+export async function increaseBalance (userId,amount,balanceId){
     try {
 
         return await prisma.balance.update({
             data:{
-                amount:updatedAmount
+                amount:{
+                    increment:amount
+                }
             },
             where:{
-                id:balanceId,
                 userId,
+                id:balanceId
             }
-        })
+        }) 
     } catch (error) {
         return error
     }
