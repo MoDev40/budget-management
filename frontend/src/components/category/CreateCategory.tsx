@@ -6,13 +6,14 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Button } from "../ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
-import { ReqBody, useCreateCategoryMutation } from "../../../strore/features/categorySlice"
+import { useCreateCategoryMutation } from "../../../strore/features/categorySlice"
 import { toast } from "sonner";
-import { ErrorRes } from "../budge/CreateBudge";
 import { IoReload } from "react-icons/io5";
+import { ErrorRes } from "@/types/interfaces";
 const CreateCategory = () => {
     const {user} = useAuth()
     const [createMutate,{isLoading}] = useCreateCategoryMutation()
+
     const categSchema = z.object({
         name:z.string(),
         userId:z.string().readonly(),
@@ -24,9 +25,7 @@ const CreateCategory = () => {
     }})
     
     const onSubmit : SubmitHandler<Inputs> = async(data)=>{
-        const {userId,name} = data
-        const createdData : ReqBody = {userId,name}
-        await createMutate(createdData).unwrap().then((data)=>{
+        await createMutate(data).unwrap().then((data)=>{
             toast(data.message)
             form.reset()
         }).catch((error:ErrorRes)=>{

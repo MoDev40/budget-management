@@ -8,23 +8,19 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { useAuth } from "@/hooks/AuthUser"
-import { useEffect } from "react"
-import { useDeleteCategoryMutation, useGetCategoryQuery } from "../../../strore/features/categorySlice"
-import UpadeteCategory from "./UpadeteCategory"
+import { ErrorRes } from "@/types/interfaces"
 import { IoReload } from "react-icons/io5"
-import { Button } from "../ui/button"
 import { MdDelete } from "react-icons/md"
 import { toast } from "sonner"
-import { ErrorRes } from "../budge/CreateBudge"
+import { useDeleteCategoryMutation, useGetCategoryQuery } from "../../../strore/features/categorySlice"
+import { Button } from "../ui/button"
+import UpadeteCategory from "./UpadeteCategory"
     
       
 function CategoryTable() {
     const {user} = useAuth()
-    const {data,isLoading} = useGetCategoryQuery({id:user?.uid as string})
+    const {data,isLoading} = useGetCategoryQuery(user?.uid as string)
     const [deleteMutate,{isLoading:deleteLoad}] = useDeleteCategoryMutation()
-    useEffect(()=>{
-        console.log(data)
-    },[data])
 
     const handleDelete : (id:string,userId:string)=> any = async(id:string,userId:string)=>{
         await deleteMutate({id,userId}).unwrap().then((data)=>{

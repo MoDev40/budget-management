@@ -5,11 +5,11 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Button } from "../ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
-import { Category, ReqBody ,useUpdateCategoryMutation} from "../../../strore/features/categorySlice"
+import { useUpdateCategoryMutation} from "../../../strore/features/categorySlice"
 import { toast } from "sonner";
 import {FaEdit} from "react-icons/fa"
-import { ErrorRes } from "../budge/CreateBudge";
 import { IoReload } from "react-icons/io5";
+import { Category, ErrorRes } from "@/types/interfaces";
 
 interface Props {
     category:Category
@@ -29,9 +29,7 @@ const UpadeteCategory : React.FC<Props> = ({category}) => {
     }})
 
     const onSubmit : SubmitHandler<Inputs> = async(data)=>{
-        const {userId,name} = data
-        const updatedData : ReqBody = {userId,name}
-        await updateMutate({id:category.id,data:updatedData}).unwrap().then((data)=>{
+        await updateMutate({id:category.id,data}).unwrap().then((data)=>{
             toast(data.message)
         }).catch((error:ErrorRes)=>{
             toast(error.data.message)

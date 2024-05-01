@@ -1,45 +1,15 @@
 import {createApi,fetchBaseQuery} from "@reduxjs/toolkit/query/react"
 import {BASE_URL} from "../baseUrl"
-
-interface Params {
-    id:string;
-}
-
-export interface ReqBody {
-    name:string;
-    userId:string;
-}
+import { Categories, CategoryInputs, DeleteCategory, SuccessResponse, UpdateCategory } from "@/types/interfaces"
 
 
-interface UpdateDataParams extends Params{
-    data:ReqBody
-}
-
-interface DeleteParams extends Params{
-    userId:string
-}
-
-export interface ResponseData {
-    message:string;
-}
-
-export interface Category { 
-    id: string;
-    name: string;
-    userId: string;
-    price: number | null;
-}
-
-export interface Categories {
-    categories:Category[]
-}
 
 const categorySlice = createApi({
     reducerPath:"categoryApi",
     baseQuery:fetchBaseQuery({baseUrl:BASE_URL}),
     tagTypes:["category"],
     endpoints:(builder)=>({
-        createCategory:builder.mutation<ResponseData,ReqBody>({
+        createCategory:builder.mutation<SuccessResponse,CategoryInputs>({
             query:(data)=>({
                 url:"create-category",
                 method:"POST",
@@ -47,7 +17,7 @@ const categorySlice = createApi({
             }),
             invalidatesTags:["category"]
         }),
-        updateCategory:builder.mutation<ResponseData,UpdateDataParams>({
+        updateCategory:builder.mutation<SuccessResponse,UpdateCategory>({
             query:({id,data})=>({
                 url:`update-category/${id}`,
                 method:"PUT",
@@ -55,15 +25,15 @@ const categorySlice = createApi({
             }),
             invalidatesTags:["category"]
         }),
-        deleteCategory:builder.mutation<ResponseData,DeleteParams>({
+        deleteCategory:builder.mutation<SuccessResponse,DeleteCategory>({
             query:({id,userId})=>({
                 url:`delete-category/${id}/${userId}`,
                 method:"DELETE"
             }),
             invalidatesTags:["category"]
         }),
-        getCategory:builder.query<Categories,Params>({
-            query:({id})=>({
+        getCategory:builder.query<Categories,string>({
+            query:(id)=>({
                 url:`get-category/${id}`
             }),
             providesTags:["category"]
