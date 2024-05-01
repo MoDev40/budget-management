@@ -1,7 +1,7 @@
-import { DeleteCancel, SingleTransaction, TransactionInputs, Transactions, UpdateTransaction } from "@/types/interfaces"
+import { DeleteCancel, SingleTransaction, TransactionInputs, Transactions, UpdateTransaction } from "@/types/transactionInterface"
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 import { BASE_URL } from "../baseUrl"
-import { ResponseData } from "./categorySlice"
+import { SuccessResponse } from "@/types/globalInterface"
 
 
 export const transactionSlice = createApi({
@@ -28,7 +28,7 @@ export const transactionSlice = createApi({
             }),
             providesTags:["trans"]
         }),
-        createTrans:builder.mutation<ResponseData,TransactionInputs>({
+        createTrans:builder.mutation<SuccessResponse,TransactionInputs>({
             query:(data)=>({
                 url:"create-transaction",
                 method:"POST",
@@ -36,7 +36,7 @@ export const transactionSlice = createApi({
             }),
             invalidatesTags:["trans"]
         }),
-        updateTrans:builder.mutation<ResponseData,UpdateTransaction>({
+        updateTrans:builder.mutation<SuccessResponse,UpdateTransaction>({
             query:({id,data})=>({
                 url:`update-transaction/${id}`,
                 method:"PUT",
@@ -44,14 +44,14 @@ export const transactionSlice = createApi({
             }),
             invalidatesTags:["trans"],
         }),
-        cancelTrans:builder.mutation<ResponseData,DeleteCancel>({
+        cancelTrans:builder.mutation<SuccessResponse,DeleteCancel>({
             query:({id,userId})=>({
                 url:`cancel-transaction/${id}/${userId}`,
                 method:"DELETE",
             }),
             invalidatesTags:["trans"]
         }),
-        deleteTrans:builder.mutation<ResponseData,DeleteCancel>({
+        deleteTrans:builder.mutation<SuccessResponse,DeleteCancel>({
             query:({id,userId})=>({
                 url:`delete-transaction/${id}/${userId}`,
                 method:"DELETE",

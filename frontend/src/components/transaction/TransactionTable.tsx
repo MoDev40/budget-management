@@ -14,7 +14,7 @@ import { Link } from "react-router-dom"
 import { toast } from "sonner"
 import { useCancelTransMutation, useDeleteTransMutation, useGetUserTransQuery } from "@/strore/features/transactionSlice"
 import { Button } from "../ui/button"
-import { ErrorRes } from "@/types/interfaces"
+import { ErrorRes } from "@/types/globalInterface"
   
     
 function TransactionTable() {

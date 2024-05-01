@@ -1,25 +1,21 @@
-import { SubmitHandler, useForm } from "react-hook-form"
-import { Button } from "../ui/button"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
-import {z} from "zod"
-import { Input } from "../ui/input"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { IoReload } from "react-icons/io5"
-import { toast } from "sonner"
 import { useAuth } from "@/hooks/AuthUser"
 import { useCreateBudgetMutation } from "@/strore/features/budgetSlice"
-import { BudgeInputs, ErrorRes, SuccessResponse } from "@/types/interfaces"
+import { BudgeInputs, Inputs, budgeSchema } from "@/types/budgeInterface"
+import { ErrorRes, SuccessResponse } from "@/types/globalInterface"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { SubmitHandler, useForm } from "react-hook-form"
+import { IoReload } from "react-icons/io5"
+import { toast } from "sonner"
+import { Button } from "../ui/button"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
+import { Input } from "../ui/input"
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 
 
 const CreateBudge = () => {
     const [createBudge,{isLoading}] = useCreateBudgetMutation()
     const {user} = useAuth()
-    const budgeSchema = z.object({
-        userId:z.string(),
-        amount:z.string(),
-    })
-    type Inputs = z.infer<typeof budgeSchema>
+
     const form = useForm<Inputs>({resolver:zodResolver(budgeSchema),defaultValues:{
         userId:user?.uid
     }})

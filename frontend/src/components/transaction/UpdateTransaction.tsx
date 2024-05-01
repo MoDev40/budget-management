@@ -1,5 +1,4 @@
 import { useAuth } from "@/hooks/AuthUser";
-import { ErrorRes, TransactionInputs } from "@/types/interfaces";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader } from "lucide-react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -14,6 +13,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "../ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Textarea } from "../ui/textarea";
+import { TransactionInputs, transSchema } from "@/types/transactionInterface";
+import { ErrorRes } from "@/types/globalInterface";
 
 
 
@@ -24,14 +25,6 @@ const UpdateTransaction = () => {
     const [updateTranMutate,{isLoading}] = useUpdateTransMutation()
     const {data:categories} = useGetCategoryQuery(user?.uid as string)
     const {data:transaction,isLoading:isFetching} = useGetSingleTransQuery(params.id as string)
-
-    const transSchema = z.object({
-        amount:z.string(),
-        userId:z.string(),
-        description:z.string().optional(),
-        categoryId:z.string(),
-        payedAt:z.string(),
-    })
 
     type Inputs = z.infer<typeof transSchema>
     const form = useForm<Inputs>({resolver:zodResolver(transSchema),defaultValues:{

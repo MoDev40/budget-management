@@ -1,11 +1,11 @@
 import { useAuth } from "@/hooks/AuthUser"
-import { ErrorRes, SuccessResponse, UpdateBudgeInputs } from "@/types/interfaces"
+import { useGetUserBudgetQuery, useUpdateBudgetMutation } from "@/strore/features/budgetSlice"
+import { Inputs, UpdateBudgeInputs, budgeSchema } from "@/types/budgeInterface"
+import { ErrorRes, SuccessResponse } from "@/types/globalInterface"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { IoReload } from "react-icons/io5"
 import { toast } from "sonner"
-import { z } from "zod"
-import { useGetUserBudgetQuery, useUpdateBudgetMutation } from "@/strore/features/budgetSlice"
 import { Button } from "../ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { Input } from "../ui/input"
@@ -16,11 +16,7 @@ const UpdateBudge = () => {
     const {user} = useAuth()
     const {data:budget}= useGetUserBudgetQuery(user?.uid as string)
     const [UpdateBudget,{isLoading}] = useUpdateBudgetMutation()
-    const budgeSchema = z.object({
-        userId:z.string(),
-        amount:z.string(),
-    })
-    type Inputs = z.infer<typeof budgeSchema>
+
     const form = useForm<Inputs>({resolver:zodResolver(budgeSchema),defaultValues:{
         userId:user?.uid,
         amount:budget?.isBudgetExists?.amount.toString()

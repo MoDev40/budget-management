@@ -4,7 +4,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "../ui/input";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { SubmitHandler, useForm } from "react-hook-form"
-import { z } from "zod"
 import { Textarea } from "../ui/textarea";
 import { toast } from "sonner";
 import { useCreateTransMutation } from "@/strore/features/transactionSlice";
@@ -12,22 +11,14 @@ import { IoReload } from "react-icons/io5";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { useGetCategoryQuery } from "@/strore/features/categorySlice"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { ErrorRes, TransactionInputs } from "@/types/interfaces";
+import { Inputs, TransactionInputs, transSchema } from "@/types/transactionInterface";
+import { ErrorRes } from "@/types/globalInterface";
 
 const CreateTransaction = () => {
     const [createTranMutate,{isLoading}] = useCreateTransMutation()
     const {user} = useAuth()
     const {data:categories} = useGetCategoryQuery(user?.uid as string)
 
-    const transSchema = z.object({
-        amount:z.string(),
-        userId:z.string(),
-        categoryId:z.string(),
-        payedAt:z.string(),
-        description:z.string().optional(),
-    })
-
-    type Inputs = z.infer<typeof transSchema>
     const form = useForm<Inputs>({resolver:zodResolver(transSchema),defaultValues:{
         userId:user?.uid || "hidQODq"
     }})

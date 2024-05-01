@@ -1,7 +1,7 @@
-import { BudgeInputs, BudgeResponse, UpdateBudge } from "@/types/interfaces"
+import { BudgeInputs, BudgeResponse, UpdateBudge } from "@/types/budgeInterface"
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 import { BASE_URL } from "../baseUrl"
-import { ResponseData } from "./categorySlice"
+import { SuccessResponse } from "@/types/globalInterface"
 
 
 export const budgetSlice = createApi({
@@ -15,7 +15,7 @@ export const budgetSlice = createApi({
             }),
             providesTags:["budget"]
         }),
-        createBudget:builder.mutation<ResponseData,BudgeInputs>({
+        createBudget:builder.mutation<SuccessResponse,BudgeInputs>({
             query:(data)=>({
                 url:"create-budget",
                 method:"POST",
@@ -23,7 +23,7 @@ export const budgetSlice = createApi({
             }),
             invalidatesTags:["budget"]
         }),
-        updateBudget:builder.mutation<ResponseData,UpdateBudge>({
+        updateBudget:builder.mutation<SuccessResponse,UpdateBudge>({
             query:({id,data})=>({
                 url:`update-budget/${id}`,
                 method:"PUT",
